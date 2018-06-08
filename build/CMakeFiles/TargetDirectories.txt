@@ -1,0 +1,5 @@
+/home/salope_j/rendu/Tek2/cpp_indie_studio/build/CMakeFiles/rebuild_cache.dir
+/home/salope_j/rendu/Tek2/cpp_indie_studio/build/CMakeFiles/edit_cache.dir
+/home/salope_j/rendu/Tek2/cpp_indie_studio/build/Save/CMakeFiles/rebuild_cache.dir
+/home/salope_j/rendu/Tek2/cpp_indie_studio/build/Save/CMakeFiles/mySave.dir
+/home/salope_j/rendu/Tek2/cpp_indie_studio/build/Save/CMakeFiles/edit_cache.dir
