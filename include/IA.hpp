@@ -13,8 +13,9 @@
 class	IA : public ACharacter
 {
 public:
-	IA(int nbrPlayer, Positions pos) { _nbrPlayer = nbrPlayer; _position = pos; }
-	void	defineAction(int, std::vector<AObject *>) {}
+	IA(int nbrPlayer, Positions pos, std::vector<std::string> sprites,
+	std::string livingBomb, std::string dyingBomb) : ACharacter(nbrPlayer, pos, sprites, livingBomb, dyingBomb) {}
+	void	defineAction(const irr::SEvent::SJoystickEvent &, std::vector<AObject *>) {}
 };
 
 #endif

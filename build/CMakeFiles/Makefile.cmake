@@ -8,7 +8,6 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
   "../CMakeLists.txt"
-  "../Save/CMakeLists.txt"
   "CMakeFiles/3.10.1/CMakeCCompiler.cmake"
   "CMakeFiles/3.10.1/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.10.1/CMakeSystem.cmake"
@@ -39,10 +38,9 @@ set(CMAKE_MAKEFILE_OUTPUTS
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
   "CMakeFiles/CMakeDirectoryInformation.cmake"
-  "Save/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "Save/CMakeFiles/mySave.dir/DependInfo.cmake"
+  "CMakeFiles/bomberman.dir/DependInfo.cmake"
   )

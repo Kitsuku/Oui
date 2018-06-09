@@ -37,10 +37,28 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for each subdirectory.
-  include("/home/salope_j/rendu/Tek2/cpp_indie_studio/build/Save/cmake_install.cmake")
-
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  if(EXISTS "$ENV{DESTDIR}/home/salope_j/rendu/Tek2/cpp_indie_studio/bomberman" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/home/salope_j/rendu/Tek2/cpp_indie_studio/bomberman")
+    file(RPATH_CHECK
+         FILE "$ENV{DESTDIR}/home/salope_j/rendu/Tek2/cpp_indie_studio/bomberman"
+         RPATH "")
+  endif()
+  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
+   "/home/salope_j/rendu/Tek2/cpp_indie_studio/bomberman")
+  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+file(INSTALL DESTINATION "/home/salope_j/rendu/Tek2/cpp_indie_studio" TYPE EXECUTABLE FILES "/home/salope_j/rendu/Tek2/cpp_indie_studio/build/bomberman")
+  if(EXISTS "$ENV{DESTDIR}/home/salope_j/rendu/Tek2/cpp_indie_studio/bomberman" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/home/salope_j/rendu/Tek2/cpp_indie_studio/bomberman")
+    if(CMAKE_INSTALL_DO_STRIP)
+      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}/home/salope_j/rendu/Tek2/cpp_indie_studio/bomberman")
+    endif()
+  endif()
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)

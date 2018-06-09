@@ -2,13 +2,13 @@
 // EPITECH PROJECT, 2018
 // Map object
 // File description:
-// 
+//
 //
 
 #ifndef MAP_HPP_
 # define MAP_HPP_
 
-#include "objects/positions.hpp"
+#include "objects/Positions.hpp"
 #include "ACharacter.hpp"
 #include "objects/AObject.hpp"
 #include <vector>
@@ -24,6 +24,8 @@ public:
 	void	generateMap();
 	void	loadMapFromSave(std::string);
 	void	saveMap();
+	std::vector<AObject *>	getAllObjects();
+	std::vector<ACharacter *>	getAllCharacters();
 	Positions	getMapSize() { return _mapSize; }
 	AObject	*getMapElem(unsigned int nb) {
 		if (nb < _map.size())
@@ -41,8 +43,8 @@ public:
 	void	addCharacter(std::unique_ptr<ACharacter> charac) { _characters.push_back(std::move(charac)); }
 protected:
 	std::vector<std::unique_ptr<AObject>>	_map;
-	std::vector<std::unique_ptr<ACharacter>>	_characters;	
-	Positions				_mapSize;	
+	std::vector<std::unique_ptr<ACharacter>>	_characters;
+	Positions				_mapSize;
 };
 
 #endif /* !MAP_HPP_ */

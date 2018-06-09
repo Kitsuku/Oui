@@ -1,17 +1,15 @@
-//
-// EPITECH PROJECT, 2018
-// Object temp
-// File description:
-// At loading
-//
+/*
+** EPITECH PROJECT, 2018
+** Object.hpp
+** File description:
+** Object temp class for load
+*/
 
-#ifndef OBJECT_HPP_
-# define OBJECT_HPP_
+#include "AObject.hpp"
 
-class	Object : public AObject
+class Object : public AObject
 {
 public:
-	void	destroy() {}
+	Object() {};
+	void	destroy() {};
 };
-
-#endif

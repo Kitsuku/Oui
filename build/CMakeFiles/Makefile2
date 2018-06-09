@@ -60,57 +60,39 @@ CMAKE_SOURCE_DIR = /home/salope_j/rendu/Tek2/cpp_indie_studio
 CMAKE_BINARY_DIR = /home/salope_j/rendu/Tek2/cpp_indie_studio/build
 
 #=============================================================================
-# Directory level rules for directory Save
-
-# Convenience name for "all" pass in the directory.
-Save/all: Save/CMakeFiles/mySave.dir/all
-
-.PHONY : Save/all
-
-# Convenience name for "clean" pass in the directory.
-Save/clean: Save/CMakeFiles/mySave.dir/clean
-
-.PHONY : Save/clean
-
-# Convenience name for "preinstall" pass in the directory.
-Save/preinstall:
-
-.PHONY : Save/preinstall
-
-#=============================================================================
-# Target rules for target Save/CMakeFiles/mySave.dir
+# Target rules for target CMakeFiles/bomberman.dir
 
 # All Build rule for target.
-Save/CMakeFiles/mySave.dir/all:
-	$(MAKE) -f Save/CMakeFiles/mySave.dir/build.make Save/CMakeFiles/mySave.dir/depend
-	$(MAKE) -f Save/CMakeFiles/mySave.dir/build.make Save/CMakeFiles/mySave.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/salope_j/rendu/Tek2/cpp_indie_studio/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target mySave"
-.PHONY : Save/CMakeFiles/mySave.dir/all
+CMakeFiles/bomberman.dir/all:
+	$(MAKE) -f CMakeFiles/bomberman.dir/build.make CMakeFiles/bomberman.dir/depend
+	$(MAKE) -f CMakeFiles/bomberman.dir/build.make CMakeFiles/bomberman.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/salope_j/rendu/Tek2/cpp_indie_studio/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42 "Built target bomberman"
+.PHONY : CMakeFiles/bomberman.dir/all
 
 # Include target in all.
-all: Save/CMakeFiles/mySave.dir/all
+all: CMakeFiles/bomberman.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-Save/CMakeFiles/mySave.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/salope_j/rendu/Tek2/cpp_indie_studio/build/CMakeFiles 5
-	$(MAKE) -f CMakeFiles/Makefile2 Save/CMakeFiles/mySave.dir/all
+CMakeFiles/bomberman.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/salope_j/rendu/Tek2/cpp_indie_studio/build/CMakeFiles 42
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/bomberman.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/salope_j/rendu/Tek2/cpp_indie_studio/build/CMakeFiles 0
-.PHONY : Save/CMakeFiles/mySave.dir/rule
+.PHONY : CMakeFiles/bomberman.dir/rule
 
 # Convenience name for target.
-mySave: Save/CMakeFiles/mySave.dir/rule
+bomberman: CMakeFiles/bomberman.dir/rule
 
-.PHONY : mySave
-
-# clean rule for target.
-Save/CMakeFiles/mySave.dir/clean:
-	$(MAKE) -f Save/CMakeFiles/mySave.dir/build.make Save/CMakeFiles/mySave.dir/clean
-.PHONY : Save/CMakeFiles/mySave.dir/clean
+.PHONY : bomberman
 
 # clean rule for target.
-clean: Save/CMakeFiles/mySave.dir/clean
+CMakeFiles/bomberman.dir/clean:
+	$(MAKE) -f CMakeFiles/bomberman.dir/build.make CMakeFiles/bomberman.dir/clean
+.PHONY : CMakeFiles/bomberman.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/bomberman.dir/clean
 
 .PHONY : clean
 

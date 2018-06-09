@@ -3,14 +3,10 @@
 // Comment utiliser les unique ptr
 // File description:
 <<<<<<< HEAD
-<<<<<<< HEAD
 // 
 =======
 //
 >>>>>>> origin/damien/gameplay
-=======
-//
->>>>>>> origin/Paul/generation_map
 //
 
 #include <iostream>
@@ -60,22 +56,16 @@ public:
 	~Stock() {}
 
 <<<<<<< HEAD
-<<<<<<< HEAD
 	void	addChild(std::unique_ptr<Pere> child) { _children.push_back(std::move(child)); }
 	Pere	*getChild(int pos) {
 =======
-=======
->>>>>>> origin/Paul/generation_map
 	void	addChild(std::unique_ptr<Pere> child)
 	{
 		_children.push_back(std::move(child));
 	}
 	Pere	*getChild(int pos)
 	{
-<<<<<<< HEAD
 >>>>>>> origin/damien/gameplay
-=======
->>>>>>> origin/Paul/generation_map
 		if (pos <= _children.size())
 			return _children[pos].get();
 		return nullptr;
@@ -105,14 +95,10 @@ int	main()
 
 /*
 <<<<<<< HEAD
-<<<<<<< HEAD
 ** équivalent de 
 =======
 ** équivalent de
 >>>>>>> origin/damien/gameplay
-=======
-** équivalent de
->>>>>>> origin/Paul/generation_map
 ** children.push_back(std::move(std::unique_ptr<Fils/Fille>())
 ** qui créer un unique_ptr)
 */
@@ -126,14 +112,10 @@ int	main()
 	// La propritété des unique_ptr va passer au vector les stockants
 	Stock	stock;
 <<<<<<< HEAD
-<<<<<<< HEAD
 	
 =======
 
 >>>>>>> origin/damien/gameplay
-=======
-
->>>>>>> origin/Paul/generation_map
 	for (int it = 0; it != children.size(); it++)
 		stock.addChild(std::move(children[it]));
 
@@ -149,13 +131,9 @@ int	main()
 	child->presentation();
 	stock.getChild(1)->presentation();
 <<<<<<< HEAD
-<<<<<<< HEAD
 	
 =======
 
 >>>>>>> origin/damien/gameplay
-=======
-
->>>>>>> origin/Paul/generation_map
 	return 0;
 }

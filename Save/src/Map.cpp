@@ -177,10 +177,12 @@ void	Map::loadMapFromSave(std::string fileName)
 	while (file) {
 		try {
 			file >> j;
-			if (j["type"] == "Object" && j["objType"] == BOMB)
-				this->addMapElem(std::move(loadBomb(j)));
-			else if (j["type"] == "Object")
-				this->addMapElem(std::move(loadObj(j)));
+			if (j["type"] == "Object") {
+				if (j["objType"] == BOMB)
+					this->addMapElem(std::move(loadBomb(j)));
+				else
+					this->addMapElem(std::move(loadObj(j)));
+			}
 			else
 				this->addCharacter(std::move(loadCharacter(j)));
 		}

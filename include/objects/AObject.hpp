@@ -8,7 +8,7 @@
 #include <time.h>
 #include <vector>
 #include <memory>
-#include "positions.hpp"
+#include "Positions.hpp"
 #include "enumObjectType.hpp"
 
 #ifndef AOBJECT_HPP_
@@ -20,23 +20,20 @@ public:
 	/* Methods */
 	virtual void		destroy() = 0;
 	objectType		getObjectType();
-	std::vector<int>	getLivingSprites();
-	std::vector<int>	getDyingSprites();
+	std::string		getLivingSprites();
+	std::string		getDyingSprites();
 	Positions		getPos();
 	bool			getIsDestroyed();
 	void			setObjectType(objectType);
-	void			setLivingSprites(std::vector<int>);
-	void			setDyingSprites(std::vector<int>);
+	void			setLivingSprites(std::string);
+	void			setDyingSprites(std::string);
 	void			setPos(Positions);
-<<<<<<< HEAD
-=======
-	void			setIsDestroyed(bool isDestroyed) {_isDestroyed = isDestroyed;}
->>>>>>> origin/Paul/generation_map
+	void			setIsDestroyed(bool);
 
 protected:
 	objectType		_objectType;
-	std::vector<int>	_livingSprites;
-	std::vector<int>	_dyingSprites;
+	std::string		_livingSprites;
+	std::string		_dyingSprites;
 	Positions		_position;
 	bool			_isDestroyed;
 };
