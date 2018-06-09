@@ -51,5 +51,6 @@ int	main()
 			ite_button = 0;
 			check = 0;
 		}
+	}
 	return 0;
 }
