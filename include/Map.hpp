@@ -17,9 +17,9 @@
 class	Map
 {
 public:
-	Map(int x, int y) { _mapSize.x = x; _mapSize.y = y; }
+	Map(float x, float y) { _mapSize.x = x; _mapSize.y = y; }
 	~Map() {}
-	void	setSizeMap(int, int);
+	void	setSizeMap(float, float);
 	void	generateCharacter(int);
 	void	generateMap();
 	void	loadMapFromSave(std::string);

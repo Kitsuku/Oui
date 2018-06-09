@@ -5,9 +5,13 @@
 // BackGroundButton functions
 //
 
-#include <sys/types.h>
-#include <dirent.h>
+#ifdef WIN32
+#include <io.h>
+#else
 #include <unistd.h>
+#endif
+#include <sys/types.h>
+#include "dirent.h"
 #include <cstdlib>
 #include <fstream>
 #include "BackGroundButton.hpp"

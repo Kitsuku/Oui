@@ -4,8 +4,12 @@
 // File description:
 // Fct Gestion
 //
-
+#ifdef WIN32
+#include <io.h>
+#else
 #include <unistd.h>
+#endif
+#include "msleep.h"
 #include "AMenu.hpp"
 #include "Graphics.hpp"
 
@@ -25,12 +29,12 @@ unsigned int	ChangeSoundMenu(unsigned int ite_sound,
 	    && ite_sound < 10) {
 		ite_sound += 1;
 		std::cout << ite_sound << std::endl;
-		usleep(500000);
+		msleep(500000);
 	} else if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_Y] > 10000
 		&& ite_sound > 0) {
 		ite_sound -= 1;
 		std::cout << ite_sound << std::endl;
-		usleep(500000);
+		msleep(500000);
 	}
 	return ite_sound;
 }
@@ -41,12 +45,12 @@ unsigned int	MoveButtonFromMenu(unsigned int ite_button, AMenu *menu,
 	if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_Y] < -10000
 	    && ite_button > 0) {
 		ite_button -= 1;
-		usleep(500000);
+		msleep(500000);
 		menu->affButton();
 	} else if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_Y] > 10000
 		&& ite_button < menu->getNbButton()) {
 		ite_button += 1;
-		usleep(500000);
+		msleep(500000);
 		menu->affButton();
 	}
 	return ite_button;
@@ -59,11 +63,11 @@ unsigned int	MoveFileFromMenu(unsigned int ite_file,
 	if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_Y] < -10000
 	&& ite_file > 0) {
 		ite_file -= 1;
-		usleep(500000);
+		msleep(500000);
 	} else if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_Y] > 10000
 		   && ite_file < (files.size() - 1)) {
 		ite_file += 1;
-		usleep(500000);
+		msleep(500000);
 	}
 	return ite_file;
 }

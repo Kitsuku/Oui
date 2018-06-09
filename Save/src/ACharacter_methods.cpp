@@ -6,7 +6,12 @@
 */
 
 #include <math.h>
+#ifdef linux
 #include <unistd.h>
+#endif
+#ifdef _WIN32
+#include <io.h>
+#endif
 #include <iostream>
 #include "ACharacter.hpp"
 #include "getObjectAtPosition.hpp"

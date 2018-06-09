@@ -163,9 +163,8 @@ int	main()
 		charac = map.getCharacter(it);
 		characPos = charac->getPos();
 		std::cout << "nbrPlayer = " << charac->getPlayerNbr()
-			  << ", pos x = " << characPos.x << " et pos y = " << characPos.y
-			  << ", isDead = " << charac->getIsDead() << std::endl;
-	}	
-	
+			<< ", pos x = " << characPos.x << " et pos y = " << characPos.y
+			<< ", isDead = " << charac->getIsDead() << std::endl;
+	}
 	return 0;
 }

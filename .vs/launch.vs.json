@@ -1,0 +1,18 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "mySave.exe (Save\\mySave.exe)",
+      "name": "mySave.exe (Save\\mySave.exe)"
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "bomberman.exe (Installer) (C:\\Users\\53983\\Desktop\\Oui\\bomberman.exe)",
+      "name": "bomberman.exe (Installer) (C:\\Users\\53983\\Desktop\\Oui\\bomberman.exe)"
+    }
+  ]
+}

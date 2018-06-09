@@ -5,10 +5,14 @@
 // main menu
 //
 
+#ifdef WIN32
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
-#include <unistd.h>
 #include <stdio.h>
 #include "MainMenu.hpp"
 #include "menu.hpp"

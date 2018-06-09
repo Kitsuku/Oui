@@ -85,7 +85,7 @@ void    Map::generateMap()
 	}
 }
 
-void	Map::setSizeMap(int posX, int posY)
+void	Map::setSizeMap(float posX, float posY)
 {
 	this->_mapSize.x = posX;
 	this->_mapSize.y = posY;
