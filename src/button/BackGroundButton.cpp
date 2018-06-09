@@ -8,11 +8,12 @@
 #ifdef WIN32
 #include <io.h>
 #include <windows.h>
+#include "dirent_windows.h"
 #else
 #include <unistd.h>
+#include <dirent.h>
 #endif
 #include <sys/types.h>
-#include "dirent.h"
 #include <cstdlib>
 #include <fstream>
 #include "BackGroundButton.hpp"

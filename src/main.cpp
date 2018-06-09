@@ -50,6 +50,8 @@ int	main()
 			menu = menu->getButton(ite_button)->getBMenu();
 			ite_button = 0;
 			check = 0;
+
 		}
+	}
 	return 0;
 }
