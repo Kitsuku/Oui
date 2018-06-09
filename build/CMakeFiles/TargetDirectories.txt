@@ -1,7 +1,0 @@
-/home/salope_j/rendu/Tek2/Oui/build/CMakeFiles/install/strip.dir
-/home/salope_j/rendu/Tek2/Oui/build/CMakeFiles/edit_cache.dir
-/home/salope_j/rendu/Tek2/Oui/build/CMakeFiles/bomberman.dir
-/home/salope_j/rendu/Tek2/Oui/build/CMakeFiles/rebuild_cache.dir
-/home/salope_j/rendu/Tek2/Oui/build/CMakeFiles/list_install_components.dir
-/home/salope_j/rendu/Tek2/Oui/build/CMakeFiles/install/local.dir
-/home/salope_j/rendu/Tek2/Oui/build/CMakeFiles/install.dir

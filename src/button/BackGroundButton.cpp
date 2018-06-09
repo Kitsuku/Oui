@@ -7,6 +7,7 @@
 
 #ifdef WIN32
 #include <io.h>
+#include <windows.h>
 #else
 #include <unistd.h>
 #endif
@@ -30,16 +31,16 @@ std::vector<std::string>	getFilesBackground()
 	struct dirent	*dirp;
 	DIR	*dir;
 	std::vector<std::string>	files;
-	std::string	path = "res/Background/";
+	std::string	path = "./res/Background/";
 
-	dir = opendir("res/Background");
+	dir = opendir("./res/Background");
 	dirp = readdir(dir);
 	while (dirp) {
 		if (dirp->d_name[0] != '.') {
 			path.append(dirp->d_name);
 			std::cout << path << std::endl;
 			files.push_back(path);
-			path = "res/Background/";
+			path = "./res/Background/";
 		}
 		dirp = readdir(dir);
 	}
