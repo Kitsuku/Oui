@@ -7,8 +7,10 @@
 
 #ifdef WIN32
 #include <io.h>
+#define VALUE_MSLEEP 500
 #else
 #include <unistd.h>
+#define VALUE_MSLEEP 500000
 #endif
 #include "msleep.h"
 #include "AMenu.hpp"
@@ -29,11 +31,11 @@ unsigned int	ChangeSoundMenu(unsigned int ite_sound,
 	if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_Y] < -10000
 	    && ite_sound < 10) {
 		ite_sound += 1;
-		msleep(500000);
+		msleep(VALUE_MSLEEP);
 	} else if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_Y] > 10000
 		&& ite_sound > 0) {
 		ite_sound -= 1;
-		msleep(500000);
+		msleep(VALUE_MSLEEP);
 	}
 	return ite_sound;
 }
@@ -41,15 +43,21 @@ unsigned int	ChangeSoundMenu(unsigned int ite_sound,
 unsigned int	MoveButtonFromMenu(unsigned int ite_button, AMenu *menu,
                                    std::vector<irr::SEvent::SJoystickEvent> joystickData)
 {
+	std::cerr << "avant premier if" << std::endl;
 	if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_Y] < -10000
 	    && ite_button > 0) {
 		ite_button -= 1;
-		msleep(500000);
+		msleep(VALUE_MSLEEP);
+		std::cerr << "fin premier if" << std::endl;
 	} else if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_Y] > 10000
 		&& ite_button < menu->getNbButton()) {
+		std::cerr << "debue second if" << std::endl;
 		ite_button += 1;
-		msleep(500000);
+		std::cerr << "JE SUIS TITI" << std::endl;
+		msleep(VALUE_MSLEEP);
+		std::cerr << "fin second if" << std::endl;
 	}
+	std::cerr << "end" << std::endl;
 	return ite_button;
 }
 
@@ -60,11 +68,11 @@ unsigned int	MoveFileFromMenu(unsigned int ite_file,
 	if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_Y] < -10000
 	&& ite_file > 0) {
 		ite_file -= 1;
-		msleep(500000);
+		msleep(VALUE_MSLEEP);
 	} else if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_Y] > 10000
 		   && ite_file < (files.size() - 1)) {
 		ite_file += 1;
-		msleep(500000);
+		msleep(VALUE_MSLEEP);
 	}
 	return ite_file;
 }

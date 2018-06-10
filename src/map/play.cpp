@@ -142,7 +142,7 @@ void	Map::giveActionToCharac(const
 				joystickData[0], vec_objects);
 		} else {
 			returnAction = ((*it).get())->defineAction(
-				joystickData[temp + 1], vec_objects);
+				joystickData[temp - 1], vec_objects);
 		}
 		if (returnAction != nullptr)
 			this->addNewElem(returnAction);

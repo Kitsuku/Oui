@@ -194,8 +194,8 @@ bool	checkIsBonus(AObject *object)
 
 void	ACharacter::moveLeft(std::vector<AObject *> objects)
 {
-	AObject		*object;
-	Positions	pos;
+	AObject		*object = nullptr;
+	Positions	pos = { 0, 0 };
 	int		idx = getObjectAtPosition(
 		floor(_position.x) - 1, floor(_position.y), objects);
 
@@ -218,8 +218,8 @@ void	ACharacter::moveLeft(std::vector<AObject *> objects)
 
 void	ACharacter::moveRight(std::vector<AObject *> objects)
 {
-	AObject		*object;
-	Positions	pos;
+	AObject		*object = nullptr;
+	Positions	pos = { 0, 0 };
 	int		idx = getObjectAtPosition(
 		ceil(_position.x) + 1, floor(_position.y), objects);
 
@@ -242,8 +242,8 @@ void	ACharacter::moveRight(std::vector<AObject *> objects)
 
 void	ACharacter::moveUp(std::vector<AObject *> objects)
 {
-	AObject		*object;
-	Positions	pos;
+	AObject		*object = nullptr;
+	Positions	pos = { 0, 0 };
 	int		idx = getObjectAtPosition(
 		floor(_position.x), floor(_position.y) - 1, objects);
 
@@ -266,8 +266,8 @@ void	ACharacter::moveUp(std::vector<AObject *> objects)
 
 void	ACharacter::moveDown(std::vector<AObject *> objects)
 {
-	AObject		*object;
-	Positions	pos;
+	AObject		*object = nullptr;
+	Positions	pos = { 0, 0 };
 	int		idx = getObjectAtPosition(
 		floor(_position.x), ceil(_position.y) + 1, objects);
 
