@@ -5,6 +5,9 @@
 ** method of the class IA
 */
 
+#ifdef WIN32
+#define __attribute__(A)
+#endif
 #include "enumObjectType.hpp"
 #include "Bomb.hpp"
 #include "IA.hpp"

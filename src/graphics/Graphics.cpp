@@ -5,6 +5,9 @@
 ** Graphical function
 */
 
+#ifdef WIN32
+#define __attribute__(A)
+#endif
 #include "Graphics.hpp"
 #include "MyException.hpp"
 #include <iostream>
@@ -266,7 +269,7 @@ void					Graphics::createAnimeCharacter(
 
 void					Graphics::displayMovingCharacter(
 					ACharacter *character,
-					auto playerIt,
+					std::vector<PlayerStruct>::iterator playerIt,
 					const Positions &sizeMap)
 {
 	if (character->getIsDead() && playerIt->oldAction != 100) {
@@ -302,7 +305,7 @@ void					Graphics::removePlayerStruct(
 
 void					Graphics::displayAliveCharacter
 (					ACharacter *character,
-					auto playerIt,
+					std::vector<PlayerStruct>::iterator playerIt,
 					const Positions &sizeMap)
 {
 	const Action			action = character->getAction();

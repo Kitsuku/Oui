@@ -153,8 +153,13 @@ void	Map::giveActionToCharac(const
 			returnAction = ((*it).get())->defineAction(
 				joystickData[0], vec_objects);
 		} else {
+#ifdef WIN32
 			returnAction = ((*it).get())->defineAction(
+				joystickData[temp], vec_objects);
+#else
+			urnAction = ((*it).get())->defineAction(
 				joystickData[temp + 1], vec_objects);
+#endif
 		}
 		if (returnAction != nullptr)
 			this->addNewElem(returnAction);
