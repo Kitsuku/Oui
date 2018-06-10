@@ -81,7 +81,7 @@ void	Map::playBombs()
 
 void	Map::checkBreakWalls(Wall *wall)
 {
-	AObject		*actual_object;
+	AObject		*actual_object = nullptr;
 
 	for (auto map_it = this->_map.begin(); map_it != this->_map.end();
 	map_it++) {
@@ -178,7 +178,7 @@ void	Map::AddBonus(AObject *actual_object)
 	objectType	type = objectType::BOMB;
 	std::string	spritePath = "";
 
-	if (actual_object->getObjectType() == objectType::WALL) {
+	if (actual_object != nullptr && actual_object->getObjectType() == objectType::WALL) {
 		random = (1 + std::rand()/(100 + 1u)/6) %100;
 		if (actual_object->getIsDestroyed() == true && random >= 70) {
 			cpy.x = (actual_object->getPos()).x;

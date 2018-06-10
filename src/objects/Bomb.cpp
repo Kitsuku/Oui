@@ -5,8 +5,12 @@
 ** Bomb methods
 */
 
-#include <iostream>
+#ifdef WIN32
+#include <io.h>
+#else
 #include <unistd.h>
+#endif
+#include <iostream>
 #include "Bomb.hpp"
 #include "checkDie.hpp"
 #include "AObject.hpp"
