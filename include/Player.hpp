@@ -5,8 +5,13 @@
 ** player class
 */
 
-#include <iostream>
+
+#ifdef WIN32
+#include <io.h>
+#else
 #include <unistd.h>
+#endif
+#include <iostream>
 #include <stdio.h>
 #include "AObject.hpp"
 #include "Graphics.hpp"

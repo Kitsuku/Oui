@@ -1,0 +1,4 @@
+C:/Users/53983/Desktop/Oui/build/CMakeFiles/bomberman.dir
+C:/Users/53983/Desktop/Oui/build/CMakeFiles/INSTALL.dir
+C:/Users/53983/Desktop/Oui/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/53983/Desktop/Oui/build/CMakeFiles/ZERO_CHECK.dir

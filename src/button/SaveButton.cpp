@@ -5,8 +5,12 @@
 // SaveButton functions
 //
 
-#include <sys/types.h>
+#ifdef WIN32
+#include "dirent_windows.h"
+#else
 #include <dirent.h>
+#endif
+#include <sys/types.h>
 #include <ctime>
 #include "Map.hpp"
 #include "SaveButton.hpp"

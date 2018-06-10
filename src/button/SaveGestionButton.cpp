@@ -5,10 +5,15 @@
 // SaveGestionButton functions
 //
 
-#include <sys/types.h>
+#ifdef WIN32
+#include <io.h>
+#include "dirent_windows.h"
+#else
 #include <dirent.h>
-#include <cstdio>
 #include <unistd.h>
+#endif
+#include <sys/types.h>
+#include <cstdio>
 #include "SaveGestionButton.hpp"
 #include "OptionMenu.hpp"
 #include "menu.hpp"

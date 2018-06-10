@@ -5,9 +5,14 @@
 // BackGroundButton functions
 //
 
-#include <sys/types.h>
-#include <dirent.h>
+#ifdef WIN32
+#include <io.h>
+#include "dirent_windows.h"
+#else
 #include <unistd.h>
+#include <dirent.h>
+#endif
+#include <sys/types.h>
 #include <cstdlib>
 #include <fstream>
 #include "SoloMenu.hpp"

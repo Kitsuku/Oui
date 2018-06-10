@@ -5,9 +5,14 @@
 // GroundButton functions
 //
 
-#include <sys/types.h>
+#ifdef WIN32
+#include <io.h>
+#include "dirent_windows.h"
+#else
 #include <dirent.h>
 #include <unistd.h>
+#endif
+#include <sys/types.h>
 #include <cstdlib>
 #include <fstream>
 #include "MultiGroundButton.hpp"

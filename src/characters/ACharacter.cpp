@@ -5,8 +5,12 @@
 ** ACharacter all methods
 */
 
-#include <math.h>
+#ifdef WIN32
+#include <io.h>
+#else
 #include <unistd.h>
+#endif
+#include <math.h>
 #include <iostream>
 #include "Action.hpp"
 #include "checkDie.hpp"
