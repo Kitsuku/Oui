@@ -42,7 +42,7 @@ bool	MyEvent::OnEvent(const irr::SEvent& event)
 	for (unsigned int i = 0; i < NBR_CONTROLLER; i++) {
 		std::cerr << event.EventType << std::endl;
 		if (event.EventType == irr::EET_JOYSTICK_INPUT_EVENT
-			&& event.JoystickEvent.Joystick == i + 1) {
+			&& event.JoystickEvent.Joystick == i) {
 			std::cerr << "Ici" << std::endl;
 			_joystickState[i] = event.JoystickEvent;
 		}
