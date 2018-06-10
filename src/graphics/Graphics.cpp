@@ -5,9 +5,6 @@
 ** Graphical function
 */
 
-#ifdef WIN32
-#define __attribute__(A)
-#endif
 #include "Graphics.hpp"
 #include "MyException.hpp"
 #include <iostream>
@@ -19,9 +16,11 @@ Graphics::Graphics(const std::string &path): _path(path), _nbrAlive(0)
 					std::unique_ptr<irr::IrrlichtDevice>(
 					irr::createDevice(irr::video::
 					EDT_NULL));
+
 	if (!tmpDevice) {
 		throw MyException("Can't create a device");
 	}
+	_firstTime = true;
 	_device = std::unique_ptr<irr::IrrlichtDevice>(
 	irr::createDevice(irr::video::EDT_OPENGL,
 	tmpDevice->getVideoModeList()->getDesktopResolution(), 16, true,
@@ -45,16 +44,14 @@ void					Graphics::displayMap(
 					const std::vector<AObject *> &objects,
 					const Positions sizeMap)
 {
-	static bool			firstTime = true;
-
-	if (!firstTime) {
+	if (!_firstTime) {
 		displayCharacter(characters, sizeMap);
 	} else {
 		createCharactersNode(characters, sizeMap);
-		firstTime = false;
+		_firstTime = false;
 	}
 	for (auto it = _playerStruct.begin(); it != _playerStruct.end(); it++) {
-		if (it->isAlive) {
+		if (it->isAlive && _characterNode[it->index]) {
 			_characterNode[it->index]->setVisible(true);
 		}
 	}
@@ -295,8 +292,10 @@ void					Graphics::removePlayerStruct(
 			characterIt++;
 			nbrAlive++;
 		}
-		if (nbrAlive >=  _nbrAlive && it->isAlive == true) {
-			_characterNode[it->index]->remove();
+		if (nbrAlive >= _nbrAlive && it->isAlive == true) {
+			//_characterNode[it->index]->remove();
+			_characterNode[it->index]->setVisible(false);
+			it->isAlive = false;
 		}
 		characterIt = character.begin();
 		nbrAlive = 0;
@@ -321,13 +320,25 @@ void					Graphics::displayAliveCharacter
 		if (oldAction != LEFT && oldAction != RIGHT && oldAction != UP
 		&& oldAction != DOWN && action != IDLE && action != PUTBOMB) {
 			_characterNode[playerIt->index]->setMD2Animation(RUN);
-			_characterNode[playerIt->index]->setRotation(
-			irr::core::vector3df(-90, 0, action * -90 - 180));
+		} else {
+			rotateCharacter(oldAction, action, playerIt->index);
+			_characterNode[playerIt->index]->setPosition(
+			irr::core::vector3df(coord.x, coord.y, coord.z - 0.5));
 		}
-		_characterNode[playerIt->index]->setPosition(
-		irr::core::vector3df(coord.x, coord.y, coord.z - 0.5));
 	}
 	playerIt->oldAction = action;
+}
+
+void					Graphics::rotateCharacter(
+					const Action oldAction,
+					const Action action,
+					const unsigned int index)
+{
+	if (oldAction == LEFT || oldAction == RIGHT || oldAction == UP
+	|| oldAction == DOWN) {
+		_characterNode[index]->setRotation(
+		irr::core::vector3df(-90, 0, action * -90 - 180));
+	}
 }
 
 void					Graphics::displayObject(
@@ -381,7 +392,7 @@ void					Graphics::displayMeshBomb(
 					const Positions &sizeMap)
 {
 	irr::scene::IAnimatedMeshSceneNode	*animeBomb;
-	
+
 	animeBomb = _smgr->addAnimatedMeshSceneNode(mesh, 0, -1,
 	irr::core::vector3df(coord.x, coord.y , coord.z),
 	irr::core::vector3df(90, 0 , 0),
@@ -501,4 +512,16 @@ void					Graphics::clear_list()
 	}
 	_animatedNode.clear();
 	_sceneNode.clear();
+}
+
+void					Graphics::reset()
+{
+	_nbrAlive = 0;
+	for (auto it = _characterNode.begin(); it != _characterNode.end();
+	it++) {
+		(*it)->remove();
+	}
+	_characterNode.clear();
+	_playerStruct.clear();
+	_firstTime = true;
 }

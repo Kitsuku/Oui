@@ -5,6 +5,12 @@
 ** Bomb methods
 */
 
+#ifdef WIN32
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
+#include <iostream>
 #include "Bomb.hpp"
 #include "checkDie.hpp"
 #include "AObject.hpp"
@@ -79,21 +85,28 @@ void	Bomb::updateTimer(AObject *object)
 	}
 }
 
-void	Bomb::checkHitWall(Positions wall_pos)
+void    Bomb::checkHitWall(Positions wall_pos)
 {
 	if (_position.y == wall_pos.y && (wall_pos.x >=
-		(_position.x - _power_left)) && (wall_pos.x <= _position.x))
-		_power_left = (_position.x - wall_pos.x);
+		(_position.x - _power_left)) && (wall_pos.x <= _position.x)) {
+		if ((_position.x - wall_pos.x) < _power_left)
+			_power_left = (_position.x - wall_pos.x);
+	}
 	if (_position.y == wall_pos.y && (wall_pos.x <=
-		(_position.x + _power_right)) && (wall_pos.x >= _position.x))
-		_power_right = (wall_pos.x - _position.x);
+		(_position.x + _power_right)) && (wall_pos.x >= _position.x)) {
+		if ((wall_pos.x - _position.x) <= _power_right)
+			_power_right = (wall_pos.x - _position.x);
+	}
 	if (_position.x == wall_pos.x && (wall_pos.y >=
-		(_position.y - _power_up)) && (wall_pos.y <= _position.y))
-		_power_up = (_position.y - wall_pos.y);
-	_power_down = (_position.x == wall_pos.x &&
-		(wall_pos.y <= (_position.y + _power_down)) &&
-		(wall_pos.y >= _position.y)) ?
-			(wall_pos.y - _position.y) : (_power_down);
+		(_position.y - _power_up)) && (wall_pos.y <= _position.y)) {
+		if ((_position.y - wall_pos.y) <= _power_up)
+			_power_up = (_position.y - wall_pos.y);
+	}
+	if (_position.x == wall_pos.x && (wall_pos.y <=
+		(_position.y + _power_down)) && (wall_pos.y >= _position.y)) {
+		if ((wall_pos.y - _position.y) <= _power_down)
+			_power_down = (wall_pos.y - _position.y);
+	}
 }
 
 time_t	Bomb::getTime()

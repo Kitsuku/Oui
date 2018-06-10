@@ -145,20 +145,20 @@ bool	ACharacter::getIsDead()
 AObject	*ACharacter::doAction(std::vector<AObject *> objects)
 {
 	void	(ACharacter::*func_ptr[5])(std::vector<AObject *>);
-	AObject	*bomb(new Bomb(this->_nbrPlayer, this->_fireRange,
-		this->_position, this->_bombLiveSprites,
-		this->_bombDeathSprites));
+	AObject	*bomb;
 
 	func_ptr[0] = &ACharacter::moveLeft;
-	func_ptr[1] = &ACharacter::moveRight;
-	func_ptr[2] = &ACharacter::moveUp;
+	func_ptr[1] = &ACharacter::moveUp;
+	func_ptr[2] = &ACharacter::moveRight;
 	func_ptr[3] = &ACharacter::moveDown;
 	if (this->_action <= 3) {
 		(*this.*func_ptr[this->_action])(objects);
 	} else if (this->_action == Action::PUTBOMB) {
-		this->putBomb(objects);
+		bomb = this->putBomb(objects);
+		this->_action = Action::IDLE;
 		return bomb;
 	}
+	this->_action = Action::IDLE;
 	return nullptr;
 }
 
@@ -199,7 +199,6 @@ void	ACharacter::moveLeft(std::vector<AObject *> objects)
 	int		idx = getObjectAtPosition(
 		floor(_position.x) - 1, floor(_position.y), objects);
 
-//	object = (idx != -1) ? (objects[idx]) : (object);
 	if (idx != -1)
 		object = objects[idx];
 	pos = (idx != -1) ? (object->getPos()) : (pos);
@@ -225,7 +224,6 @@ void	ACharacter::moveRight(std::vector<AObject *> objects)
 	int		idx = getObjectAtPosition(
 		ceil(_position.x) + 1, floor(_position.y), objects);
 
-//	object = (idx != -1) ? (objects[idx]) : (object);
 	if (idx != -1)
 		object = objects[idx];
 	pos = (idx != -1) ? (object->getPos()) : (pos);
@@ -251,7 +249,6 @@ void	ACharacter::moveUp(std::vector<AObject *> objects)
 	int		idx = getObjectAtPosition(
 		floor(_position.x), floor(_position.y) - 1, objects);
 
-//	object = (idx != -1) ? (objects[idx]) : (object);
 	if (idx != -1)
 		object = objects[idx];
 	pos = (idx != -1) ? (object->getPos()) : (pos);
@@ -277,7 +274,6 @@ void	ACharacter::moveDown(std::vector<AObject *> objects)
 	int		idx = getObjectAtPosition(
 		floor(_position.x), ceil(_position.y) + 1, objects);
 
-//	object = (idx != -1) ? (objects[idx]) : (object);
 	if (idx != -1)
 		object = objects[idx];
 	pos = (idx != -1) ? (object->getPos()) : (pos);
@@ -302,24 +298,23 @@ void	ACharacter::removePutBomb()
 		this->_nbrPutBomb -= 1;
 }
 
-std::unique_ptr<AObject>	ACharacter::putBomb(
-				std::vector<AObject *> objects)
+AObject *ACharacter::putBomb(std::vector<AObject *> objects)
 {
-	int		idx = getObjectAtPosition(
-				floor(_position.x),
-				floor(_position.y), objects);
-	std::unique_ptr<AObject>	new_bomb(new Bomb(this->_nbrPlayer,
-					this->_fireRange,
-					this->_position, this->_bombLiveSprites,
-					this->_bombDeathSprites));
-
-	this->_action = Action::IDLE;
+        int		idx = getObjectAtPosition(
+		floor(_position.x),
+		floor(_position.y), objects);
+        Positions	new_pos = { round(this->_position.x),
+				    round(this->_position.y) };
+        AObject		*obj;
+	Bomb		*bomb(new Bomb(this->_nbrPlayer,
+				       this->_fireRange, new_pos, this->_bombLiveSprites,
+				       this->_bombDeathSprites));
 	if (this->_nbrPutBomb < this->_nbrMaxBomb && idx == -1) {
+		obj = static_cast<AObject *>(bomb);
 		this->_nbrPutBomb += 1;
-		return new_bomb;
+		return obj;
 	}
-	new_bomb.reset();
-	return nullptr;
+        return nullptr;
 }
 
 void	ACharacter::checkDeath(std::vector<AObject *> objects)

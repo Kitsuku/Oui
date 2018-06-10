@@ -89,6 +89,7 @@ class Graphics
 			const std::vector<irr::SEvent::SJoystickEvent>
 							&getController(void)
 							const;
+	void	reset();
 		private:
 			void	initAttribut();
 			void	displayCharacter(
@@ -111,8 +112,9 @@ class Graphics
 			void	displayAliveCharacter(ACharacter *character,
 				std::vector<PlayerStruct>::iterator playerIt,
 				const Positions &sizeMap);
-			void	displayObject(AObject *object, const Positions
-				&sizeMap);
+	void	displayObject(AObject *object, const Positions
+					      &sizeMap);
+	void	rotateCharacter(const Action, const Action, const unsigned int);
 			void	displayBomb(Bomb *bomb,
 				const Positions &sizeMap);
 			void	displayMeshBomb(
@@ -147,6 +149,7 @@ class Graphics
 								_characterNode;
 			std::vector<PlayerStruct>		_playerStruct;
 			unsigned int				_nbrAlive;
+	bool	_firstTime;
 };
 
 #endif /* !GRAPHICS_HPP_ */

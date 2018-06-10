@@ -13,6 +13,7 @@
 #include "Bomb.hpp"
 #include "objects/AObject.hpp"
 #include "Graphics.hpp"
+#include "Wall.hpp"
 #include <vector>
 #include <memory>
 
@@ -50,13 +51,18 @@ public:
 	void	addCharacter(std::unique_ptr<ACharacter> charac) { _characters.push_back(std::move(charac)); }
 	void	play(Graphics *);
 	void	playObjects();
+	void	checkBreakWalls(Wall *);
+	void	playWalls();
+	void	playBombs();
+	void	removeNbrBombCharacter(AObject *);
 	void	checkDeleteObjects();
+	void	checkDeleteCharac();
 	void	addNewElem(AObject *object);
 	void	giveActionToCharac(const std::vector<irr::SEvent::SJoystickEvent> &joystickData);
 	int	startPause(Graphics *, int, int, Map *);
 	unsigned int	countCharacters();
 	void	updateBombTimer(Bomb *, unsigned int);
-	void	updateBombPower(Bomb *);
+	AObject	*updateBombPower(Bomb *);
 	void	setSpriteGroundAndBackGround();
 
 protected:

@@ -27,16 +27,17 @@ unsigned int	Map::countCharacters()
 	return total;
 }
 
-void	Map::updateBombPower(Bomb *bomb)
+AObject	*Map::updateBombPower(Bomb *bomb)
 {
 	AObject		*actual_object;
 
 	for (auto it = this->_map.begin(); it != this->_map.end(); it++) {
 		actual_object = (*it).get();
 		if (actual_object->getObjectType() != objectType::BOMB) {
-			bomb->updatePower(actual_object);
+			(static_cast<Bomb *>(bomb))->updatePower(actual_object);
 		}
 	}
+	return bomb;
 }
 
 void	Map::updateBombTimer(Bomb *bomb, unsigned int index)
@@ -55,7 +56,7 @@ void	Map::updateBombTimer(Bomb *bomb, unsigned int index)
 	}
 }
 
-void	Map::playObjects()
+void	Map::playBombs()
 {
 	AObject		*actual_object;
 	unsigned int	index = 0;
@@ -64,8 +65,7 @@ void	Map::playObjects()
 	object_it++) {
 		actual_object = (*object_it).get();
 		if (actual_object->getObjectType() == objectType::BOMB) {
-			this->updateBombPower(
-				static_cast<Bomb *>(actual_object));
+			actual_object = this->updateBombPower(static_cast<Bomb *>(actual_object));
 		}
 	}
 	for (auto it = this->_map.begin(); it != this->_map.end(); it++) {
@@ -75,6 +75,30 @@ void	Map::playObjects()
 				static_cast<Bomb *>(actual_object), index);
 		}
 		index += 1;
+	}
+}
+
+void	Map::checkBreakWalls(Wall *wall)
+{
+        AObject	*actual_object;
+
+	for (auto map_it = this->_map.begin(); map_it != this->_map.end();
+	map_it++) {
+		wall->checkBreak((*map_it).get());
+	}
+}
+
+void	Map::playWalls()
+{
+	AObject		*actual_object;
+	unsigned int	index = 0;
+
+	for (auto object_it = this->_map.begin(); object_it != this->_map.end();
+	object_it++) {
+		actual_object = (*object_it).get();
+		if (actual_object->getObjectType() == objectType::WALL) {
+			checkBreakWalls(static_cast<Wall *>(actual_object));
+		}
 	}
 }
 
@@ -113,15 +137,56 @@ int	Map::startPause(Graphics *graph, int check_a, int check_b, Map *map)
 	return 0;
 }
 
+void	Map::removeNbrBombCharacter(AObject *actual_object)
+{
+	Bomb	*bomb = static_cast<Bomb *>(actual_object);
+	int	it = 0;
+	ACharacter	*actual_chara;
+
+	for (auto it = _characters.begin(); it != _characters.end(); it++) {
+		actual_chara = (*it).get();
+		if (actual_chara->getNbrPlayer() ==
+		bomb->getNbrPlayer()) {
+			actual_chara->removePutBomb();
+			return ;
+		}
+	}
+}
+
 void	Map::checkDeleteObjects()
 {
-	AObject		*actual_object;
-	unsigned int	it = 0;
+	AObject	*actual_object;
 
 	for (auto it = _map.begin(); it != _map.end(); it++) {
 		actual_object = (*it).get();
-		if (actual_object->getIsDestroyed() == true)
+		if (actual_object->getIsDestroyed() == true) {
+			if (actual_object->getObjectType() ==
+			objectType::BOMB) {
+				removeNbrBombCharacter(actual_object);
+				this->playWalls();
+			}
 			_map.erase(it);
+			it = _map.begin();
+		}
+        }
+}
+
+void	Map::checkDeleteCharac()
+{
+	ACharacter	*actual_charac = nullptr;
+	std::vector<AObject *>	vec_objects;
+
+	for (auto it = _map.begin(); it != _map.end(); it++)
+		vec_objects.push_back((*it).get());
+	for (auto it = _characters.begin(); it != _characters.end(); it++) {
+		actual_charac = (*it).get();
+                //actual_charac->checkBonus(vec_objects);
+		actual_charac->checkDeath(vec_objects);
+		if (actual_charac->getIsDead() == true &&
+		actual_charac->getNbrPutBomb() == 0) {
+			_characters.erase(it);
+			it = _characters.begin();
+		}
 	}
 }
 
@@ -139,15 +204,13 @@ void 	Map::addNewElem(AObject *newObject)
 void	Map::giveActionToCharac(const
 		std::vector<irr::SEvent::SJoystickEvent> &joystickData)
 {
-	AObject 	*returnAction;
+	AObject 	*returnAction = nullptr;
 	int 		temp = 0;
 	std::vector<AObject *>	vec_objects;
 
 	for (auto it = _map.begin(); it != _map.end(); it++)
 		vec_objects.push_back((*it).get());
 	for (auto it = _characters.begin(); it != _characters.end(); it++) {
-		((*it).get())->checkDeath(vec_objects);
-		((*it).get())->checkBonus(vec_objects);
 		temp = ((*it).get())->getNbrPlayer();
 		if (temp < 0) {
 			returnAction = ((*it).get())->defineAction(
@@ -157,8 +220,8 @@ void	Map::giveActionToCharac(const
 			returnAction = ((*it).get())->defineAction(
 				joystickData[temp], vec_objects);
 #else
-			urnAction = ((*it).get())->defineAction(
-				joystickData[temp + 1], vec_objects);
+			returnAction = ((*it).get())->defineAction(
+				joystickData[temp - 1], vec_objects);
 #endif
 		}
 		if (returnAction != nullptr)
@@ -181,16 +244,16 @@ void	Map::play(Graphics *graph)
 			check_quit = this->startPause(graph, 0, 0, this);
 			check_start = 0;
 		}
-		this->playObjects();
-		this->checkDeleteObjects();
+		this->playBombs();
+		this->checkDeleteCharac();
 		this->giveActionToCharac(joystickData);
-		std::cout << "Il y a " << this->getNbCharacterAlive() << " player alive" << std::endl;
-		std::cout << "Il y a " << this->getNbIAAlive() << " IA alive" << std::endl;
+		this->checkDeleteObjects();
 		graph->displayBackground(_backGround);
 		graph->displayGround(_ground);
 		graph->displayMap(this->getAllCharacters(), this->getAllObjects(), this->_mapSize);
 		graph->end();
 	}
+	graph->reset();
 }
 
 /*int	main()

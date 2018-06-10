@@ -5,6 +5,7 @@
 ** checkDie function
 */
 
+#include <math.h>
 #include "checkDie.hpp"
 #include "AObject.hpp"
 
@@ -44,12 +45,14 @@ bool	checkDieY(Positions object_pos, Positions bomb_pos,
 	return false;
 }
 
-bool	checkDie(Positions object_pos, Positions bomb_pos,
-		Bomb *bomb)
+bool    checkDie(Positions object_pos, Positions bomb_pos,
+                Bomb *bomb)
 {
-	if (checkDieX(object_pos, bomb_pos, bomb) == true)
-		return true;
-	if (checkDieY(object_pos, bomb_pos, bomb) == true)
-		return true;
-	return false;
+        bomb_pos.x = floor(bomb_pos.x);
+        bomb_pos.y = floor(bomb_pos.y);
+        if (checkDieX(object_pos, bomb_pos, bomb) == true)
+                return true;
+        if (checkDieY(object_pos, bomb_pos, bomb) == true)
+                return true;
+        return false;
 }
