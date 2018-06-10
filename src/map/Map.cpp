@@ -59,22 +59,52 @@ std::vector<ACharacter *>	Map::getAllCharacters()
 	return allCharacters;
 }
 
+std::vector<Positions>	Map::coordForUnbrWall()
+{
+	Positions		pos;
+	std::vector<Positions>	ret;
+	std::string		finishWall = "res/rockwall_height.bmp";
+
+	for (int y = 1; y < 10; y += 2) {
+		for(int x = 1; x < 12; x += 2) {
+			pos.y = y;
+			pos.x = x;
+			ret.push_back(pos);
+			std::unique_ptr<AObject>        newWall(new UnbrWall(pos, finishWall));
+			this->_map.push_back(std::move(newWall));
+		}
+	}
+	return ret;
+}
+
+bool	isUnbrWall(std::vector<Positions> posUnbrWall, Positions coord)
+{
+	int	temp = 0;
+
+	for (std::vector<Positions>::iterator it = posUnbrWall.begin(); it != posUnbrWall.end(); it++) {
+		if (posUnbrWall.at(temp).x == coord.x && posUnbrWall.at(temp).y == coord.y)
+			return false;
+		temp += 1;
+	}
+	return true;
+}
+
 void    Map::generateMap()
 {
 	Positions		coord;
 	int			rand;
-	std::string	test;
+	std::vector<Positions>	posUnbrWall = this->coordForUnbrWall();
+	std::string		wall = "res/wall.jpg";
+	std::string		unWall = "res/brokenWall.png";
+	std::string		finishWall = "res/rockwall_height.bmp";
 
 	coord.x = 2;
 	coord.y = 0;
 	while (coord.y != 11) {
-		rand = 101;
 		openFieldStartChara(&coord);
-		while (rand > 100) {
-			rand = 1 + std::rand()/((100 + 1u)/6);
-		}
-		if (rand <= 90) {
-			std::unique_ptr<AObject>        newWall(new Wall(coord, test, test));
+		rand = (1 + std::rand()/((100 + 1u)/6)) % 100;
+		if (coord.x <= 12 && coord.y <= 10 && isUnbrWall(posUnbrWall, coord) && rand <= 83) {
+			std::unique_ptr<AObject>        newWall(new Wall(coord, wall, unWall));
 			this->_map.push_back(std::move(newWall));
 		}
 		coord.x += 1;
@@ -85,52 +115,53 @@ void    Map::generateMap()
 	}
 }
 
-void	Map::setSizeMap(float posX, float posY)
+void	Map::setSizeMap(int posX, int posY)
 {
-	this->_mapSize.x = posX;
-	this->_mapSize.y = posY;
+	this->_mapSize.x = 13;
+	this->_mapSize.y = 11;
 }
 
 void	Map::generateCharacter(int nbPlayer)
 {
 	Positions	pos;
-	std::vector<std::string>	vec_sprite;
-	std::string	sprite;
+	std::vector<std::string>	vec_sprite = {"res/sydney.md2", "res/sydney.bmp"};
+	std::string	living = "res/Dynamite/dinamite.obj";
+	std::string	dead = "res/fire.bmp";
 
 	if (nbPlayer == 1) {
 		pos.x = 0;
 		pos.y = 0;
-		std::unique_ptr<ACharacter>     newChara(new Player(1, pos, vec_sprite, sprite, sprite));
+		std::unique_ptr<ACharacter>     newChara(new Player(1, pos, vec_sprite, living, dead));
 		this->_characters.push_back(std::move(newChara));
-		pos.x = 12;
+		pos.x = _mapSize.x - 1;
 		pos.y = 0;
-		std::unique_ptr<ACharacter>     newIA1(new IA(-1, pos, vec_sprite, sprite, sprite));
+		std::unique_ptr<ACharacter>     newIA1(new IA(-1, pos, vec_sprite, living, dead));
 		this->_characters.push_back(std::move(newIA1));
 		pos.x = 0;
-		pos.y = 10;
-		std::unique_ptr<ACharacter>     newIA2(new IA(-2, pos, vec_sprite, sprite, sprite));
+		pos.y = _mapSize.y - 1;
+		std::unique_ptr<ACharacter>     newIA2(new IA(-2, pos, vec_sprite, living, dead));
 		this->_characters.push_back(std::move(newIA2));
-		pos.x = 12;
-		pos.y = 10;
-		std::unique_ptr<ACharacter>     newIA3(new IA(-3, pos, vec_sprite, sprite, sprite));
+		pos.x = _mapSize.x - 1;
+		pos.y = _mapSize.y - 1;
+		std::unique_ptr<ACharacter>     newIA3(new IA(-3, pos, vec_sprite, living, dead));
 		this->_characters.push_back(std::move(newIA3));
 	}
 	else if (nbPlayer == 2){
 		pos.x = 0;
 		pos.y = 0;
-		std::unique_ptr<ACharacter>     newChara(new Player(1, pos, vec_sprite, sprite, sprite));
+		std::unique_ptr<ACharacter>     newChara(new Player(1, pos, vec_sprite, living, dead));
 		this->_characters.push_back(std::move(newChara));
-		pos.x = 12;
+		pos.x = _mapSize.x - 1;
 		pos.y = 0;
-		std::unique_ptr<ACharacter>     newChara2(new Player(2, pos, vec_sprite, sprite, sprite));
+		std::unique_ptr<ACharacter>     newChara2(new Player(2, pos, vec_sprite, living, dead));
 		this->_characters.push_back(std::move(newChara2));
 		pos.x = 0;
-		pos.y = 10;
-		std::unique_ptr<ACharacter>     newIA(new IA(-1, pos, vec_sprite, sprite, sprite));
+		pos.y = _mapSize.y - 1;
+		std::unique_ptr<ACharacter>     newIA(new IA(-1, pos, vec_sprite, living, dead));
 		this->_characters.push_back(std::move(newIA));
-		pos.x = 12;
-		pos.y = 10;
-		std::unique_ptr<ACharacter>     newIA2(new IA(-2, pos, vec_sprite, sprite, sprite));
+		pos.x = _mapSize.x - 1;
+		pos.y = _mapSize.y - 1;
+		std::unique_ptr<ACharacter>     newIA2(new IA(-2, pos, vec_sprite, living, dead));
 		this->_characters.push_back(std::move(newIA2));
 	}
 }
@@ -202,24 +233,24 @@ void	saveCharacter(ACharacter *character, std::string fileName)
 	file.close();
 }
 
-void	Map::saveMap()
+void	Map::saveMap(std::string save)
 {
 	AObject		*obj;
 	ACharacter	*character;
 	std::ofstream	file;
 
-	file.open("save.json", std::ofstream::out | std::ofstream::trunc);
+	file.open(save, std::ofstream::out | std::ofstream::trunc);
 	file.close();
 	for (int it = 0; it != getNbMapElem(); it++) {
 		obj = getMapElem(it);
 		if (obj->getObjectType() == BOMB)
-			saveBomb(obj, "save.json");
+			saveBomb(obj, save);
 		else
-			saveObj(obj,"save.json");
+			saveObj(obj,save);
 	}
 	for (int it = 0; it < getNbCharacter(); it++) {
 		character = getCharacter(it);
-		saveCharacter(character, "save.json");
+		saveCharacter(character, save);
 	}
 }
 
@@ -300,4 +331,22 @@ void	Map::loadMapFromSave(std::string fileName)
 			file.close();
 		}
 	}
+}
+
+void	Map::setSpriteGroundAndBackGround()
+{
+	std::cout << "JEPASSEICI" << std::endl;
+	std::ifstream	file(".conf", std::ios::in);
+	std::string	buffer;
+
+	if (file) {
+		getline(file, buffer);
+		std::cout << buffer << std::endl;
+		this->_backGround = buffer;
+		getline(file, buffer);
+		std::cout << buffer << std::endl;
+		this->_ground = buffer;
+		file.close();
+	} else
+		std::cerr << "Error with configuration." << std::endl;
 }

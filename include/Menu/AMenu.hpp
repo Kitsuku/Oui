@@ -11,16 +11,20 @@
 #include <vector>
 #include <memory>
 #include <iostream>
+#include "Graphics.hpp"
 
 class AButton;
 
 class AMenu
 {
 public:
-	int		affButton(/*lib graph*/);
+	int		affButton(Graphics *, int);
 	AButton		*getButton(int);
 	unsigned int	getNbButton();
 	std::string	getName();
+	void		displayButtonBox(Graphics *, int, unsigned int);
+	void		displayButtonName(Graphics *, unsigned int);
+	virtual void		displayButton(Graphics *, int);
 protected:
 	std::vector<std::unique_ptr<AButton>>	_buttons;
 	std::string				_name;

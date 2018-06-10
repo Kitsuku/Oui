@@ -22,4 +22,5 @@ void	ReturnMmButton::action(Graphics *graph)
 	std::unique_ptr<AMenu> main (new MainMenu);
 
 	_menu = std::move(main);
+	graph = graph;
 }

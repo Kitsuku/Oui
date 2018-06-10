@@ -16,6 +16,8 @@ class MainMenu : public AMenu
 public:
 	MainMenu();
 	~MainMenu();
+
+	void	displayButton(Graphics *, int) override;
 };
 
 #endif /* !MAINMENU_HPP_ */

@@ -9,7 +9,7 @@
 
 ExitButton::ExitButton()
 {
-	_name = "exit";
+	_name = "Exit";
 }
 
 ExitButton::~ExitButton()
@@ -18,4 +18,5 @@ ExitButton::~ExitButton()
 
 void	ExitButton::action(Graphics *graph)
 {
+	graph = graph;
 }

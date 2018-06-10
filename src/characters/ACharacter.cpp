@@ -5,12 +5,8 @@
 ** ACharacter all methods
 */
 
-#ifdef WIN32
-#include <io.h>
-#else
-#include <unistd.h>
-#endif
 #include <math.h>
+#include <unistd.h>
 #include <iostream>
 #include "Action.hpp"
 #include "checkDie.hpp"
@@ -142,14 +138,12 @@ bool	ACharacter::getIsDead()
 	return _isDead;
 }
 
-std::unique_ptr<AObject>	ACharacter::doAction(
-					std::vector<AObject *> objects)
+AObject	*ACharacter::doAction(std::vector<AObject *> objects)
 {
 	void	(ACharacter::*func_ptr[5])(std::vector<AObject *>);
-	std::unique_ptr<AObject>	bomb(new Bomb(this->_nbrPlayer,
-					this->_fireRange,
-					this->_position, this->_bombLiveSprites,
-					this->_bombDeathSprites));
+	AObject	*bomb(new Bomb(this->_nbrPlayer, this->_fireRange,
+		this->_position, this->_bombLiveSprites,
+		this->_bombDeathSprites));
 
 	func_ptr[0] = &ACharacter::moveLeft;
 	func_ptr[1] = &ACharacter::moveRight;
@@ -157,19 +151,22 @@ std::unique_ptr<AObject>	ACharacter::doAction(
 	func_ptr[3] = &ACharacter::moveDown;
 	if (this->_action <= 3) {
 		(*this.*func_ptr[this->_action])(objects);
-		bomb.reset();
-		return nullptr;
-	} else if (this->_action == Action::PUTBOMB)
-		bomb = this->putBomb(objects);
-	return bomb;
+	} else if (this->_action == Action::PUTBOMB) {
+		this->putBomb(objects);
+		return bomb;
+	}
+	return nullptr;
 }
 
 void	ACharacter::checkBonus(std::vector<AObject *> objects)
 {
 	int	object_on_pos = getObjectAtPosition(
 		floor(_position.x), floor(_position.y), objects);
-	objectType	type = objects[object_on_pos]->getObjectType();
+	objectType	type;
 
+	if (object_on_pos == -1)
+		return;
+	type = objects[object_on_pos]->getObjectType();
 	if (type == objectType::BOMBUP) {
 		this->_nbrMaxBomb += 1;
 	} else if (type == objectType::FIREUP) {
@@ -178,7 +175,7 @@ void	ACharacter::checkBonus(std::vector<AObject *> objects)
 		this->_speed += 0.1;
 	}
 	_wallPass = (type == objectType::WALLPASS) ?
-		(_wallPass = true) : (false);
+		(true) : (false);
 }
 
 bool	checkIsBonus(AObject *object)

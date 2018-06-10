@@ -22,4 +22,5 @@ void	SoloButton::action(Graphics *graph)
 	std::unique_ptr<AMenu> solo (new SoloMenu);
 
 	_menu = std::move(solo);
+	graph = graph;
 }

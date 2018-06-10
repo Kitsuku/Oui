@@ -22,4 +22,5 @@ void	MultiButton::action(Graphics *graph)
 	std::unique_ptr<AMenu> multi (new MultiMenu);
 
 	_menu = std::move(multi);
+	graph = graph;
 }

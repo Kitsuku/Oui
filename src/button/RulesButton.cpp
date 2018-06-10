@@ -22,5 +22,6 @@ void	RulesButton::action(Graphics *graph)
 	std::unique_ptr<AMenu> pause (new PauseMenu);
 
 	_menu = std::move(pause);
+	graph = graph;
 	//Appel DisplaySprite
 }

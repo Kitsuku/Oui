@@ -5,6 +5,7 @@
 ** AObjects methods
 */
 
+#include <iostream>
 #include "AObject.hpp"
 
 objectType		AObject::getObjectType()

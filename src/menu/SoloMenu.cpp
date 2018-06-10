@@ -6,15 +6,15 @@
 //
 
 #include "SoloMenu.hpp"
-#include "GroundButton.hpp"
-#include "BackGroundButton.hpp"
+#include "SoloGroundButton.hpp"
+#include "BackGroundSoloButton.hpp"
 #include "StartButton.hpp"
 #include "ReturnMPButton.hpp"
 
 SoloMenu::SoloMenu()
 {
-	std::unique_ptr<AButton> ground (new GroundButton);
-	std::unique_ptr<AButton> background (new BackGroundButton);
+	std::unique_ptr<AButton> ground (new SoloGroundButton);
+	std::unique_ptr<AButton> background (new BackGroundSoloButton);
 	std::unique_ptr<AButton> start (new StartButton);
 	std::unique_ptr<AButton> return_mm (new ReturnMmButton);
 

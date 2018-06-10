@@ -41,7 +41,8 @@ void	SaveButton::save(Map map)
 		path.at(ite) = '_';
 		ite = path.find(':', ite);
 	}
-	map.saveMap();
+	path.append(".json");
+	map.saveMap(path);
 }
 
 void	SaveButton::action(Graphics *graph)

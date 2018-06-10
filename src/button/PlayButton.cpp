@@ -22,4 +22,5 @@ void	PlayButton::action(Graphics *graph)
 	std::unique_ptr<AMenu> play_menu (new PlayMenu);
 
 	_menu = std::move(play_menu);
+	graph = graph;
 }

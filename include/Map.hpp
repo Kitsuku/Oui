@@ -10,20 +10,22 @@
 
 #include "objects/Positions.hpp"
 #include "ACharacter.hpp"
+#include "Bomb.hpp"
 #include "objects/AObject.hpp"
+#include "Graphics.hpp"
 #include <vector>
 #include <memory>
 
 class	Map
 {
 public:
-	Map(float x, float y) { _mapSize.x = x; _mapSize.y = y; }
+	Map(int x, int y) { _mapSize.x = 13; _mapSize.y = 11; }
 	~Map() {}
-	void	setSizeMap(float, float);
+	void	setSizeMap(int, int);
 	void	generateCharacter(int);
 	void	generateMap();
 	void	loadMapFromSave(std::string);
-	void	saveMap();
+	void	saveMap(std::string);
 	std::vector<AObject *>	getAllObjects();
 	std::vector<ACharacter *>	getAllCharacters();
 	Positions	getMapSize() { return _mapSize; }
@@ -37,14 +39,28 @@ public:
 			return _characters.at(nb).get();
 		return nullptr;
 	}
+	std::vector<Positions>	coordForUnbrWall();
 	int	getNbMapElem() { return _map.size(); }
 	int	getNbCharacter() { return _characters.size(); }
 	void	addMapElem(std::unique_ptr<AObject> obj) { _map.push_back(std::move(obj)); }
 	void	addCharacter(std::unique_ptr<ACharacter> charac) { _characters.push_back(std::move(charac)); }
+	void	play(Graphics *);
+	void	playObjects();
+	void	checkDeleteObjects();
+	void	addNewElem(AObject *object);
+	void	giveActionToCharac(const std::vector<irr::SEvent::SJoystickEvent> &joystickData);
+	void	startPause(Graphics *);
+	unsigned int	countCharacters();
+	void	updateBombTimer(Bomb *, unsigned int);
+	void	updateBombPower(Bomb *);
+	void	setSpriteGroundAndBackGround();
+
 protected:
-	std::vector<std::unique_ptr<AObject>>	_map;
+	std::vector<std::unique_ptr<AObject>>		_map;
 	std::vector<std::unique_ptr<ACharacter>>	_characters;
-	Positions				_mapSize;
+	Positions					_mapSize;
+	std::string					_ground;
+	std::string					_backGround;
 };
 
 #endif /* !MAP_HPP_ */

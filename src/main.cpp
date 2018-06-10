@@ -5,18 +5,13 @@
 // main menu
 //
 
-#ifdef WIN32
-#include <io.h>
-#else
-#include <unistd.h>
-#endif
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <unistd.h>
 #include <stdio.h>
 #include "MainMenu.hpp"
 #include "menu.hpp"
-
 #include "Map.hpp"
 
 /*int	main()
@@ -39,19 +34,19 @@ int	main()
 	Graphics	graph("./");
 	int		check = 0;
 
-	while (menu && graph.run()) {
+	while (menu && graph.begin()) {
 		const std::vector<irr::SEvent::SJoystickEvent>
 			&joystickData = graph.getController();
 		ite_button = MoveButtonFromMenu(ite_button, menu, joystickData);
 		check = ButtonUnpressed(joystickData, check, 0);
+		menu->displayButton(&graph, ite_button);
 		if (check == 2) {
-			menu->affButton();
 			menu->getButton(ite_button)->action(&graph);
 			menu = menu->getButton(ite_button)->getBMenu();
 			ite_button = 0;
 			check = 0;
-
 		}
+		graph.end();
 	}
 	return 0;
 }

@@ -5,14 +5,14 @@
 ** AObject declaration
 */
 
+#ifndef AOBJECT_HPP_
+# define AOBJECT_HPP_
+
 #include <time.h>
 #include <vector>
 #include <memory>
 #include "Positions.hpp"
 #include "enumObjectType.hpp"
-
-#ifndef AOBJECT_HPP_
-# define AOBJECT_HPP_
 
 class	AObject
 {

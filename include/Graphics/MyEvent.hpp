@@ -6,9 +6,9 @@
 */
 
 #ifndef MYEVENT_HPP_
-# define MYEVENT_HPP_
+	#define MYEVENT_HPP_
 
-# define NBR_CONTROLLER 2
+	#define NBR_CONTROLLER 2
 
 	#include <irrlicht.h>
 	#include <vector>

@@ -5,12 +5,8 @@
 ** player class
 */
 
-#ifdef WIN32
-#include <io.h>
-#else
-#include <unistd.h>
-#endif
 #include <iostream>
+#include <unistd.h>
 #include <stdio.h>
 #include "AObject.hpp"
 #include "Graphics.hpp"
@@ -27,7 +23,7 @@ public:
 		std::string, std::string);
 	Player();
 	/* Methods */
-	void	defineAction(const irr::SEvent::SJoystickEvent &,
+	AObject	*defineAction(const irr::SEvent::SJoystickEvent &,
 			std::vector<AObject *>);
 	void	defineUpDownAction(const irr::SEvent::SJoystickEvent &,
 			std::vector<AObject *>);

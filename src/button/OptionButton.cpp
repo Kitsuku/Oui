@@ -22,4 +22,5 @@ void	OptionButton::action(Graphics *graph)
 	std::unique_ptr<AMenu> option (new OptionMenu);
 
 	_menu = std::move(option);
+	graph = graph;
 }

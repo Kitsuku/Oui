@@ -6,15 +6,15 @@
 //
 
 #include "MultiMenu.hpp"
-#include "GroundButton.hpp"
-#include "BackGroundButton.hpp"
+#include "MultiGroundButton.hpp"
+#include "BackGroundMultiButton.hpp"
 #include "StartButton.hpp"
 #include "ReturnMPButton.hpp"
 
 MultiMenu::MultiMenu()
 {
-	std::unique_ptr<AButton> ground (new GroundButton);
-	std::unique_ptr<AButton> background (new BackGroundButton);
+	std::unique_ptr<AButton> ground (new MultiGroundButton);
+	std::unique_ptr<AButton> background (new BackGroundMultiButton);
 	std::unique_ptr<AButton> start (new StartButton);
 	std::unique_ptr<AButton> return_mm (new ReturnMmButton);
 

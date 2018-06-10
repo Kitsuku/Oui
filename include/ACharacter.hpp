@@ -24,9 +24,9 @@ public:
 	/* Destructor */
 	~ACharacter();
 	/* Methods */
-	virtual void		defineAction(const
+	virtual AObject		*defineAction(const
 		irr::SEvent::SJoystickEvent &, std::vector<AObject *>) = 0;
-	std::unique_ptr<AObject>	doAction(std::vector<AObject *>);
+	AObject			*doAction(std::vector<AObject *>);
 	void				setNbrPlayer(int);
 	void				setPos(Positions);
 	void				setSprites(std::vector<std::string>);

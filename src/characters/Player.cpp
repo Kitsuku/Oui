@@ -46,13 +46,19 @@ void	Player::defineLeftRightAction(const irr::SEvent::SJoystickEvent &keys,
 	}
 }
 
-void	Player::defineAction(const irr::SEvent::SJoystickEvent &keys,
+AObject	*Player::defineAction(const irr::SEvent::SJoystickEvent &keys,
 	std::vector<AObject *> objects)
 {
+	AObject	*bomb;
+
 	defineUpDownAction(keys, objects);
 	defineLeftRightAction(keys, objects);
-	if (keys.IsButtonPressed(0)) {
+	std::cout << "Joueur" << std::endl;
+	if (keys.IsButtonPressed(1)) {
+		std::cout << "BOMBE" << std::endl;
 		this->_action = Action::PUTBOMB;
-		this->doAction(objects);
+		bomb = this->doAction(objects);
+		return bomb;
 	}
+	return nullptr;
 }
