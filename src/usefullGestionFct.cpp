@@ -10,7 +10,7 @@
 #define VALUE_MSLEEP 500
 #else
 #include <unistd.h>
-#define VALUE_MSLEEP 500000
+#define VALUE_MSLEEP 500
 #endif
 #include "msleep.h"
 #include "AMenu.hpp"
