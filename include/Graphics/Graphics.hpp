@@ -104,12 +104,12 @@ class Graphics
 				const std::vector<std::string>
 				&objectPath, const coord_t &coord);
 			void	displayMovingCharacter(ACharacter *character,
-				std::vector<PlayerStruct>::iterator playerIt,
+				auto playerIt,
 				const Positions &sizeMap);
 			void	removePlayerStruct(
 				const std::vector<ACharacter *> &character);
 			void	displayAliveCharacter(ACharacter *character,
-				std::vector<PlayerStruct>::iterator playerIt,
+				auto playerIt,
 				const Positions &sizeMap);
 			void	displayObject(AObject *object, const Positions
 				&sizeMap);

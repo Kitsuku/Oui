@@ -6,6 +6,7 @@
 */
 
 #include <iostream>
+#include "SaveButton.hpp"
 #include "Player.hpp"
 #include "Bomb.hpp"
 #include "AObject.hpp"
@@ -77,28 +78,39 @@ void	Map::playObjects()
 	}
 }
 
-void	Map::startPause(Graphics *graph)
+int	Map::startPause(Graphics *graph, int check_a, int check_b, Map *map)
 {
 	std::unique_ptr<AMenu>	menu_pause (new PauseMenu);
+	SaveButton	save_game;
 	AMenu		*menu = menu_pause.get();
 	unsigned int	ite_button = 0;
-	int		check_a = 0;
+	int		check_x = 0;
 
 	graph->end();
-	while (menu && graph->begin()) {
+	while (menu && graph->begin() && check_b != 2) {
                 const std::vector<irr::SEvent::SJoystickEvent>
                         &joystickData = graph->getController();
 		ite_button = MoveButtonFromMenu(ite_button, menu, joystickData);
 		check_a = ButtonUnpressed(joystickData, check_a, 0);
+		check_x = ButtonUnpressed(joystickData, check_x, 2);
+		check_b = ButtonUnpressed(joystickData, check_b, 1);
 		menu->displayButton(graph, ite_button);
+		graph->displayText("PRESS B TO GO TO MENU",
+				{1400, 920, 200, 30}, {100, 255, 255, 255});
+		graph->displayText("PRESS X TO SAVE THE GAME",
+				{1400, 1020, 200, 30}, {100, 255, 255, 255});
 		if (check_a == 2) {
 			menu->getButton(ite_button)->action(graph);
 			menu = menu->getButton(ite_button)->getBMenu();
 			ite_button = 0;
 			check_a = 0;
-		}
+		} else if (check_x == 2)
+			save_game.save(map);
 		graph->end();
 	}
+	if (check_b == 2)
+		return -1;
+	return 0;
 }
 
 void	Map::checkDeleteObjects()
@@ -142,7 +154,7 @@ void	Map::giveActionToCharac(const
 				joystickData[0], vec_objects);
 		} else {
 			returnAction = ((*it).get())->defineAction(
-				joystickData[temp - 1], vec_objects);
+				joystickData[temp + 1], vec_objects);
 		}
 		if (returnAction != nullptr)
 			this->addNewElem(returnAction);
@@ -153,19 +165,22 @@ void	Map::play(Graphics *graph)
 {
 	AObject		*temp;
 	int		check_start = 0;
+	int		check_quit = 0;
 
 	graph->end();
-	while (graph->begin() && this->countCharacters() != 1) {
+	while (graph->begin() && this->countCharacters() != 1 && check_quit != -1) {
 		const std::vector<irr::SEvent::SJoystickEvent>
 			&joystickData = graph->getController();
 		check_start = ButtonUnpressed(joystickData, check_start, 7);
 		if (check_start == 2) {
-			this->startPause(graph);
+			check_quit = this->startPause(graph, 0, 0, this);
 			check_start = 0;
 		}
 		this->playObjects();
 		this->checkDeleteObjects();
 		this->giveActionToCharac(joystickData);
+		std::cout << "Il y a " << this->getNbCharacterAlive() << " player alive" << std::endl;
+		std::cout << "Il y a " << this->getNbIAAlive() << " IA alive" << std::endl;
 		graph->displayBackground(_backGround);
 		graph->displayGround(_ground);
 		graph->displayMap(this->getAllCharacters(), this->getAllObjects(), this->_mapSize);

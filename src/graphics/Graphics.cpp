@@ -23,9 +23,6 @@ Graphics::Graphics(const std::string &path): _path(path), _nbrAlive(0)
 	irr::createDevice(irr::video::EDT_OPENGL,
 	tmpDevice->getVideoModeList()->getDesktopResolution(), 16, true,
 	false, false, &_eventReceiver));
-	std::cerr << " width : " << tmpDevice->getVideoModeList()->getDesktopResolution().Width;
-	std::cerr << " width : " << tmpDevice->getVideoModeList()->getDesktopResolution().Height << std::endl;
-	std::cerr << "Salut toi" << std::endl;
 	if (!_device) {
 		throw MyException("Can't create a device");
 	}
@@ -166,7 +163,6 @@ const MyEvent				&Graphics::getEventReceiver(void)
 const std::vector<irr::SEvent::SJoystickEvent>
 					&Graphics::getController(void) const
 {
-	std::cerr << "Hey yo" << std::endl;
 	return _eventReceiver.getJoystickState();
 }
 
@@ -270,7 +266,7 @@ void					Graphics::createAnimeCharacter(
 
 void					Graphics::displayMovingCharacter(
 					ACharacter *character,
-					std::vector<PlayerStruct>::iterator playerIt,
+					auto playerIt,
 					const Positions &sizeMap)
 {
 	if (character->getIsDead() && playerIt->oldAction != 100) {
@@ -306,7 +302,7 @@ void					Graphics::removePlayerStruct(
 
 void					Graphics::displayAliveCharacter
 (					ACharacter *character,
-					std::vector<PlayerStruct>::iterator playerIt,
+					auto playerIt,
 					const Positions &sizeMap)
 {
 	const Action			action = character->getAction();

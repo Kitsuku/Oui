@@ -21,6 +21,8 @@ class	Map
 public:
 	Map(int x, int y) { _mapSize.x = 13; _mapSize.y = 11; }
 	~Map() {}
+	int	getNbIAAlive();
+	int	getNbCharacterAlive();
 	void	setSizeMap(int, int);
 	void	generateCharacter(int);
 	void	generateMap();
@@ -42,6 +44,8 @@ public:
 	std::vector<Positions>	coordForUnbrWall();
 	int	getNbMapElem() { return _map.size(); }
 	int	getNbCharacter() { return _characters.size(); }
+	std::string	getBackground();
+	std::string	getGround();
 	void	addMapElem(std::unique_ptr<AObject> obj) { _map.push_back(std::move(obj)); }
 	void	addCharacter(std::unique_ptr<ACharacter> charac) { _characters.push_back(std::move(charac)); }
 	void	play(Graphics *);
@@ -49,7 +53,7 @@ public:
 	void	checkDeleteObjects();
 	void	addNewElem(AObject *object);
 	void	giveActionToCharac(const std::vector<irr::SEvent::SJoystickEvent> &joystickData);
-	void	startPause(Graphics *);
+	int	startPause(Graphics *, int, int, Map *);
 	unsigned int	countCharacters();
 	void	updateBombTimer(Bomb *, unsigned int);
 	void	updateBombPower(Bomb *);

@@ -53,9 +53,7 @@ AObject	*Player::defineAction(const irr::SEvent::SJoystickEvent &keys,
 
 	defineUpDownAction(keys, objects);
 	defineLeftRightAction(keys, objects);
-	std::cout << "Joueur" << std::endl;
 	if (keys.IsButtonPressed(1)) {
-		std::cout << "BOMBE" << std::endl;
 		this->_action = Action::PUTBOMB;
 		bomb = this->doAction(objects);
 		return bomb;

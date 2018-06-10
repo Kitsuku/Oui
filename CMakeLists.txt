@@ -45,7 +45,8 @@ IF(WIN32)
     src/button/SaveGestionButton.cpp
     src/button/SoloButton.cpp
     src/button/SoundButton.cpp
-    src/button/StartButton.cpp)
+    src/button/StartMultiButton.cpp
+    src/button/StartSoloButton.cpp)
   set (GRAPHICSRC
     src/graphics/Graphics.cpp
     src/graphics/MyEvent.cpp
@@ -97,7 +98,8 @@ ELSE(WIN32)
     src/button/SaveGestionButton.cpp
     src/button/SoloButton.cpp
     src/button/SoundButton.cpp
-    src/button/StartButton.cpp)
+    src/button/StartSoloButton.cpp
+    src/button/StartMultiButton.cpp)
   set (GRAPHICSRC
     src/graphics/Graphics.cpp
     src/graphics/MyEvent.cpp

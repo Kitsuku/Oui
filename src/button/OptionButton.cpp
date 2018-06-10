@@ -21,9 +21,6 @@ void	OptionButton::action(Graphics *graph)
 {
 	std::unique_ptr<AMenu> option (new OptionMenu);
 
-	std::cerr << "Action bouton début" << std::endl;
 	_menu = std::move(option);
-	std::cerr << "move option" << std::endl;
-	//graph = graph;
-	std::cerr << "fin" << std::endl;
+	graph = graph;
 }

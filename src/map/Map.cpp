@@ -24,6 +24,16 @@
 #include <iostream>
 #include <fstream>
 
+std::string	Map::getBackground()
+{
+	return _backGround;
+}
+
+std::string	Map::getGround()
+{
+	return _ground;
+}
+
 void    openFieldStartChara(Positions *coord)
 {
 	if ((coord->y == 0 && coord->x == 10) ||
@@ -57,6 +67,32 @@ std::vector<ACharacter *>	Map::getAllCharacters()
 	for (int it = 0; it != getNbCharacter(); it++)
 		allCharacters.push_back(getCharacter(it));
 	return allCharacters;
+}
+
+int	Map::getNbCharacterAlive()
+{
+	int	nb = 0;
+	int	lenVector = 0;
+
+	for (auto it = _characters.begin(); it != _characters.end(); it++) {
+		if ((_characters[lenVector].get()->getNbrPlayer()) > 0)
+		    nb += 1;
+		lenVector += 1;
+	}
+	return nb;
+}
+
+int	Map::getNbIAAlive()
+{
+	int	nb = 0;
+	int	lenVector = 0;
+
+	for (auto it = _characters.begin(); it != _characters.end(); it++) {
+		if ((_characters[lenVector].get()->getNbrPlayer()) < 0)
+			nb += 1;
+		lenVector += 1;
+	}	
+	return nb;
 }
 
 std::vector<Positions>	Map::coordForUnbrWall()
@@ -220,7 +256,7 @@ void	saveCharacter(ACharacter *character, std::string fileName)
 	j["type"] = "Character";
 	j["playerNbr"] = character->getNbrPlayer();
 	j["maxBombNbr"] = character->getNbrMaxBomb();
-	j["putbBmbNbr"] = character->getNbrPutBomb();
+	j["putBombNbr"] = character->getNbrPutBomb();
 	j["fireRange"] = character->getFireRange();
 	j["speed"] = character->getSpeed();
 	j["wallPass"] = character->getWallPass();
@@ -259,6 +295,7 @@ std::unique_ptr<AObject>	loadBomb(nlohmann::json j)
 	std::unique_ptr<Bomb>	bomb(new Bomb());
 	Positions			bombPos;
 
+	std::cout << "Je suis mickey bomb" << std::endl;
 	bombPos.x = j["posX"];
 	bombPos.y = j["posY"];
 	bomb->setObjectType(BOMB);
@@ -280,6 +317,7 @@ std::unique_ptr<AObject>	loadObj(nlohmann::json j)
 	std::unique_ptr<AObject>	obj(new Object());
 	Positions			objPos;
 
+	std::cout << "Je suis mickey obj" << std::endl;
 	objPos.x = j["posX"];
 	objPos.y = j["posY"];
 	obj->setObjectType(j["objType"]);
@@ -298,15 +336,27 @@ std::unique_ptr<ACharacter>	loadCharacter(nlohmann::json j)
 	characPos.x = j["posX"];
 	characPos.y = j["posY"];
 	character->setPos(characPos);
+	std::cout << "Je suis mickey character" << std::endl;
 	character->setNbrPlayer(j["playerNbr"]);
+	std::cout << "Je suis mickey character2" << std::endl;
 	character->setNbrMaxBomb(j["maxBombNbr"]);
+	std::cout << "Je suis mickey character3" << std::endl;
 	character->setNbrPutBomb(j["putBombNbr"]);
+	std::cout << "Je suis mickey character4" << std::endl;
 	character->setFireRange(j["fireRange"]);
+	std::cout << "Je suis mickey character5" << std::endl;
 	character->setSpeed(j["speed"]);
+	std::cout << "Je suis mickey character6" << std::endl;
 	character->setWallPass(j["wallPass"]);
+	std::cout << "Je suis mickey character7" << std::endl;
 	character->setIsDead(j["isDead"]);
+	std::cout << "Je suis mickey character8" << std::endl;
 	character->setSprites(j["sprites"]);
+	std::cout << "Je suis mickey character9" << std::endl;
 	character->setAction(j["action"]);
+	std::cout << "Je suis mickey character10" << std::endl;
+//	std::cout << "nbplayer = " << character->getNbrPlayer() << std::endl;
+	std::cout << "Je suis fin mickey character" << std::endl;
 	return (std::move(character));
 }
 
@@ -314,10 +364,15 @@ void	Map::loadMapFromSave(std::string fileName)
 {
 	std::ifstream	file(fileName);
 	nlohmann::json	j;
-
+      
+	std::cout << "Je suis mickey" << std::endl;
+	std::cout << "filename = " << fileName << std::endl;
+	setSpriteGroundAndBackGround();
 	while (file) {
 		try {
+			std::cout << "Je suis mickey try" << std::endl;
 			file >> j;
+			std::cout << "Je suis mickey try2" << std::endl;
 			if (j["type"] == "Object") {
 				if (j["objType"] == BOMB)
 					this->addMapElem(std::move(loadBomb(j)));

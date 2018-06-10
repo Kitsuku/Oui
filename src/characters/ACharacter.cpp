@@ -194,12 +194,14 @@ bool	checkIsBonus(AObject *object)
 
 void	ACharacter::moveLeft(std::vector<AObject *> objects)
 {
-	AObject		*object = nullptr;
+	AObject		*object;
 	Positions	pos = { 0, 0 };
 	int		idx = getObjectAtPosition(
 		floor(_position.x) - 1, floor(_position.y), objects);
 
-	object = (idx != -1) ? (objects[idx]) : (object);
+//	object = (idx != -1) ? (objects[idx]) : (object);
+	if (idx != -1)
+		object = objects[idx];
 	pos = (idx != -1) ? (object->getPos()) : (pos);
 	if (idx != -1 && _wallPass == false) {
 		if (floor(_position.y) != pos.y ||
@@ -218,12 +220,14 @@ void	ACharacter::moveLeft(std::vector<AObject *> objects)
 
 void	ACharacter::moveRight(std::vector<AObject *> objects)
 {
-	AObject		*object = nullptr;
+	AObject		*object;
 	Positions	pos = { 0, 0 };
 	int		idx = getObjectAtPosition(
 		ceil(_position.x) + 1, floor(_position.y), objects);
 
-	object = (idx != -1) ? (objects[idx]) : (object);
+//	object = (idx != -1) ? (objects[idx]) : (object);
+	if (idx != -1)
+		object = objects[idx];
 	pos = (idx != -1) ? (object->getPos()) : (pos);
 	if (idx != -1 && _wallPass == false) {
 		if (floor(_position.y) != pos.y ||
@@ -242,12 +246,14 @@ void	ACharacter::moveRight(std::vector<AObject *> objects)
 
 void	ACharacter::moveUp(std::vector<AObject *> objects)
 {
-	AObject		*object = nullptr;
+	AObject		*object;
 	Positions	pos = { 0, 0 };
 	int		idx = getObjectAtPosition(
 		floor(_position.x), floor(_position.y) - 1, objects);
 
-	object = (idx != -1) ? (objects[idx]) : (object);
+//	object = (idx != -1) ? (objects[idx]) : (object);
+	if (idx != -1)
+		object = objects[idx];
 	pos = (idx != -1) ? (object->getPos()) : (pos);
 	if (idx != -1 && _wallPass == false) {
 		if (floor(_position.x) != pos.x ||
@@ -266,12 +272,14 @@ void	ACharacter::moveUp(std::vector<AObject *> objects)
 
 void	ACharacter::moveDown(std::vector<AObject *> objects)
 {
-	AObject		*object = nullptr;
+	AObject		*object;
 	Positions	pos = { 0, 0 };
 	int		idx = getObjectAtPosition(
 		floor(_position.x), ceil(_position.y) + 1, objects);
 
-	object = (idx != -1) ? (objects[idx]) : (object);
+//	object = (idx != -1) ? (objects[idx]) : (object);
+	if (idx != -1)
+		object = objects[idx];
 	pos = (idx != -1) ? (object->getPos()) : (pos);
 	if (idx != -1 && _wallPass == false) {
 		if (floor(_position.x) != pos.x ||
