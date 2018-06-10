@@ -47,6 +47,8 @@ public:
 	bool				getWallPass();
 	bool				getIsDead();
 	int				getFireRange();
+	unsigned int			getDelayDead();
+	void				addDelayDead();
 	void				moveLeft(std::vector<AObject *>);
 	void				moveRight(std::vector<AObject *>);
 	void				moveUp(std::vector<AObject *>);
@@ -69,6 +71,7 @@ protected:
 	std::vector<std::string>	_sprites;
 	std::string			_bombLiveSprites;
 	std::string			_bombDeathSprites;
+	unsigned int			_delayDead;
 };
 
 #endif

@@ -4,6 +4,7 @@ IF(WIN32)
   include_directories(include include/Menu include/Button include/Graphics include/objects include/Irrlicht json-develop/single_include/nlohmann /user/X11R6/include)
   set (SRC
     src/main.cpp
+    src/Launcher.cpp
     src/checkDie.cpp
     src/getObjectAtPosition.cpp
     src/usefullGestionFct.cpp)
@@ -65,6 +66,7 @@ ELSE(WIN32)
   project(bomberman)
   include_directories(include include/Menu include/Button include/Graphics include/objects include/Irrlicht json-develop/single_include/nlohmann /user/X11R6/include)
   set (SRC
+    src/Launcher.cpp
     src/main.cpp
     src/checkDie.cpp
     src/getObjectAtPosition.cpp

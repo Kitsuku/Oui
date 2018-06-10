@@ -5,52 +5,30 @@
 // main menu
 //
 
-#ifdef WIN32
-#include <io.h>
-#else
-#include <unistd.h>
-#endif
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <unistd.h>
 #include <stdio.h>
-#include "MainMenu.hpp"
-#include "menu.hpp"
-#include "Map.hpp"
+#include "Launcher.hpp"
+#include "MyException.hpp"
 
-/*int	main()
+int	main(int ac, char **av)
 {
-	Map	save(1,1);
+	std::string	path(av[0]);
+	unsigned int 	size = path.size();
+	Launcher	launcher;
 
-	std::srand(std::time(nullptr));
-	save.setSizeMap(13, 11);
-	save.generateMap();
-	save.generateCharacter(2);
-	save.saveMap();
-	return 0;
-	}*/
-
-int	main()
-{
-	std::unique_ptr<AMenu> main_menu (new MainMenu);
-	AMenu		*menu = main_menu.get();
-	unsigned int	ite_button = 0;
-	Graphics	graph("./");
-	int		check = 0;
-
-	while (menu && graph.begin()) {
-		const std::vector<irr::SEvent::SJoystickEvent>
-			&joystickData = graph.getController();
-		ite_button = MoveButtonFromMenu(ite_button, menu, joystickData);
-		check = ButtonUnpressed(joystickData, check, 0);
-		menu->displayButton(&graph, ite_button);
-		if (check == 2) {
-			menu->getButton(ite_button)->action(&graph);
-			menu = menu->getButton(ite_button)->getBMenu();
-			ite_button = 0;
-			check = 0;
-		}
-		graph.end();
+	while (path[size] != '/') {
+		--size;
+	}
+	path = path.substr(0, size + 1);
+	launcher.setPath(path);
+	try {
+		launcher.launch();
+	} catch (const MyException &error) {
+		std::cout << error.what() << std::endl;
+		return 84;
 	}
 	return 0;
 }

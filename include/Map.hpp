@@ -11,9 +11,9 @@
 #include "objects/Positions.hpp"
 #include "ACharacter.hpp"
 #include "Bomb.hpp"
+#include "Wall.hpp"
 #include "objects/AObject.hpp"
 #include "Graphics.hpp"
-#include "Wall.hpp"
 #include <vector>
 #include <memory>
 
@@ -22,8 +22,6 @@ class	Map
 public:
 	Map(int x, int y) { _mapSize.x = 13; _mapSize.y = 11; }
 	~Map() {}
-	int	getNbIAAlive();
-	int	getNbCharacterAlive();
 	void	setSizeMap(int, int);
 	void	generateCharacter(int);
 	void	generateMap();
@@ -45,8 +43,7 @@ public:
 	std::vector<Positions>	coordForUnbrWall();
 	int	getNbMapElem() { return _map.size(); }
 	int	getNbCharacter() { return _characters.size(); }
-	std::string	getBackground();
-	std::string	getGround();
+	int	getNbCharacterAlive();
 	void	addMapElem(std::unique_ptr<AObject> obj) { _map.push_back(std::move(obj)); }
 	void	addCharacter(std::unique_ptr<ACharacter> charac) { _characters.push_back(std::move(charac)); }
 	void	play(Graphics *);
@@ -59,11 +56,15 @@ public:
 	void	checkDeleteCharac();
 	void	addNewElem(AObject *object);
 	void	giveActionToCharac(const std::vector<irr::SEvent::SJoystickEvent> &joystickData);
-	int	startPause(Graphics *, int, int, Map *);
+	void	startPause(Graphics *);
 	unsigned int	countCharacters();
 	void	updateBombTimer(Bomb *, unsigned int);
-	AObject	*updateBombPower(Bomb *);
+	AObject	*updateBombPower(AObject *);
 	void	setSpriteGroundAndBackGround();
+	void	AddBonus(AObject *);
+	std::string getBackground();
+	std::string getGround();
+	int getNbIAAlive();
 
 protected:
 	std::vector<std::unique_ptr<AObject>>		_map;

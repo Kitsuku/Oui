@@ -29,11 +29,15 @@ public:
 	time_t	getTime();
 	int	getPower(std::string);
 	int	getNbrPlayer();
+	unsigned int			getDelayDead();
+	void				addDelayDead();
 	void	setTime(time_t);
 	void	setPower(std::string, int);
 	void	setNbrPlayer(int);
 
+
 protected:
+	unsigned int		_delayDead;
 	int	_nbrPlayer;
 	time_t	_time;
 	int	_power_default;
@@ -41,6 +45,7 @@ protected:
 	int	_power_down;
 	int	_power_left;
 	int	_power_right;
+	
 };
 
 #endif /* !CLASSBOMB_HPP_ */

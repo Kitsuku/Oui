@@ -48,4 +48,3 @@ const std::vector<irr::SEvent::SJoystickEvent>
 {
 	return _joystickState;
 }
-

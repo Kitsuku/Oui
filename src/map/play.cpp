@@ -6,9 +6,10 @@
 */
 
 #include <iostream>
-#include "SaveButton.hpp"
 #include "Player.hpp"
 #include "Bomb.hpp"
+#include "Wall.hpp"
+#include "Bonus.hpp"
 #include "AObject.hpp"
 #include "ACharacter.hpp"
 #include "Map.hpp"
@@ -21,13 +22,13 @@ unsigned int	Map::countCharacters()
 
 	for (auto vec_it = _characters.begin(); vec_it != _characters.end();
 	vec_it++) {
-		if (((*vec_it).get())->getIsDead() == true)
+		if (((*vec_it).get())->getIsDead() != true)
 			total += 1;
 	}
 	return total;
 }
 
-AObject	*Map::updateBombPower(Bomb *bomb)
+AObject	*Map::updateBombPower(AObject *bomb)
 {
 	AObject		*actual_object;
 
@@ -65,7 +66,7 @@ void	Map::playBombs()
 	object_it++) {
 		actual_object = (*object_it).get();
 		if (actual_object->getObjectType() == objectType::BOMB) {
-			actual_object = this->updateBombPower(static_cast<Bomb *>(actual_object));
+			actual_object = this->updateBombPower(actual_object);
 		}
 	}
 	for (auto it = this->_map.begin(); it != this->_map.end(); it++) {
@@ -80,11 +81,12 @@ void	Map::playBombs()
 
 void	Map::checkBreakWalls(Wall *wall)
 {
-        AObject	*actual_object;
+	AObject		*actual_object;
 
 	for (auto map_it = this->_map.begin(); map_it != this->_map.end();
 	map_it++) {
 		wall->checkBreak((*map_it).get());
+		this->AddBonus(actual_object);
 	}
 }
 
@@ -102,39 +104,28 @@ void	Map::playWalls()
 	}
 }
 
-int	Map::startPause(Graphics *graph, int check_a, int check_b, Map *map)
+void	Map::startPause(Graphics *graph)
 {
 	std::unique_ptr<AMenu>	menu_pause (new PauseMenu);
-	SaveButton	save_game;
 	AMenu		*menu = menu_pause.get();
 	unsigned int	ite_button = 0;
-	int		check_x = 0;
+	int		check_a = 0;
 
 	graph->end();
-	while (menu && graph->begin() && check_b != 2) {
+	while (menu && graph->begin()) {
                 const std::vector<irr::SEvent::SJoystickEvent>
                         &joystickData = graph->getController();
 		ite_button = MoveButtonFromMenu(ite_button, menu, joystickData);
 		check_a = ButtonUnpressed(joystickData, check_a, 0);
-		check_x = ButtonUnpressed(joystickData, check_x, 2);
-		check_b = ButtonUnpressed(joystickData, check_b, 1);
 		menu->displayButton(graph, ite_button);
-		graph->displayText("PRESS B TO GO TO MENU",
-				{1400, 920, 200, 30}, {100, 255, 255, 255});
-		graph->displayText("PRESS X TO SAVE THE GAME",
-				{1400, 1020, 200, 30}, {100, 255, 255, 255});
 		if (check_a == 2) {
 			menu->getButton(ite_button)->action(graph);
 			menu = menu->getButton(ite_button)->getBMenu();
 			ite_button = 0;
 			check_a = 0;
-		} else if (check_x == 2)
-			save_game.save(map);
+		}
 		graph->end();
 	}
-	if (check_b == 2)
-		return -1;
-	return 0;
 }
 
 void	Map::removeNbrBombCharacter(AObject *actual_object)
@@ -155,20 +146,59 @@ void	Map::removeNbrBombCharacter(AObject *actual_object)
 
 void	Map::checkDeleteObjects()
 {
-	AObject	*actual_object;
+	AObject		*actual_object;
+	Bomb		*casting;
 
 	for (auto it = _map.begin(); it != _map.end(); it++) {
 		actual_object = (*it).get();
 		if (actual_object->getIsDestroyed() == true) {
 			if (actual_object->getObjectType() ==
 			objectType::BOMB) {
-				removeNbrBombCharacter(actual_object);
-				this->playWalls();
+				casting = static_cast<Bomb *>(actual_object);
+				if (casting->getDelayDead() > 50) {
+					removeNbrBombCharacter(actual_object);
+					this->playWalls();
+					_map.erase(it);
+					it = _map.begin();
+				} else {
+					casting->addDelayDead();
+				}
+			} else {
+				_map.erase(it);
+				it = _map.begin();
 			}
-			_map.erase(it);
-			it = _map.begin();
 		}
-        }
+	}
+}
+
+void	Map::AddBonus(AObject *actual_object)
+{
+	Positions	cpy = {0, 0};
+	int		random = 0;
+	objectType	type = objectType::BOMB;
+	std::string	spritePath = "";
+
+	if (actual_object->getObjectType() == objectType::WALL) {
+		random = (1 + std::rand()/(100 + 1u)/6) %100;
+		if (actual_object->getIsDestroyed() == true && random >= 70) {
+			cpy.x = (actual_object->getPos()).x;
+			cpy.y = (actual_object->getPos()).y;
+			if (random >= 90) {
+				type = objectType::BOMBUP;
+				spritePath = "res/bombUp.png";
+			}
+			else if (random >= 80) {
+				type = objectType::WALLPASS;
+				spritePath = "res/wallPass.png";
+			}
+			else if (random >= 70) {
+				type = objectType::FIREUP;
+				spritePath = "res/fireUp.png";
+			}
+			std::unique_ptr<AObject>	newBonus(new Bonus(cpy, spritePath, type));
+			this->_map.push_back(std::move(newBonus));
+		}
+	}
 }
 
 void	Map::checkDeleteCharac()
@@ -180,12 +210,16 @@ void	Map::checkDeleteCharac()
 		vec_objects.push_back((*it).get());
 	for (auto it = _characters.begin(); it != _characters.end(); it++) {
 		actual_charac = (*it).get();
-                //actual_charac->checkBonus(vec_objects);
+		actual_charac->checkBonus(vec_objects);
 		actual_charac->checkDeath(vec_objects);
 		if (actual_charac->getIsDead() == true &&
-		actual_charac->getNbrPutBomb() == 0) {
+		actual_charac->getNbrPutBomb() == 0 &&
+		actual_charac->getDelayDead() > 1) {
 			_characters.erase(it);
 			it = _characters.begin();
+		} else if (actual_charac->getIsDead() == true &&
+		actual_charac->getNbrPutBomb() == 0) {
+			actual_charac->addDelayDead();
 		}
 	}
 }
@@ -211,18 +245,14 @@ void	Map::giveActionToCharac(const
 	for (auto it = _map.begin(); it != _map.end(); it++)
 		vec_objects.push_back((*it).get());
 	for (auto it = _characters.begin(); it != _characters.end(); it++) {
+		returnAction = nullptr;
 		temp = ((*it).get())->getNbrPlayer();
-		if (temp < 0) {
+		if (!(((*it).get())->getIsDead()) && temp < 0) {
 			returnAction = ((*it).get())->defineAction(
 				joystickData[0], vec_objects);
-		} else {
-#ifdef WIN32
+		} else if (!(((*it).get())->getIsDead())) {
 			returnAction = ((*it).get())->defineAction(
-				joystickData[temp], vec_objects);
-#else
-			returnAction = ((*it).get())->defineAction(
-				joystickData[temp - 1], vec_objects);
-#endif
+				joystickData[0], vec_objects);
 		}
 		if (returnAction != nullptr)
 			this->addNewElem(returnAction);
@@ -231,17 +261,15 @@ void	Map::giveActionToCharac(const
 
 void	Map::play(Graphics *graph)
 {
-	AObject		*temp;
 	int		check_start = 0;
-	int		check_quit = 0;
 
 	graph->end();
-	while (graph->begin() && this->countCharacters() != 1 && check_quit != -1) {
+	while (graph->begin() && this->countCharacters() > 1) {
 		const std::vector<irr::SEvent::SJoystickEvent>
 			&joystickData = graph->getController();
 		check_start = ButtonUnpressed(joystickData, check_start, 7);
 		if (check_start == 2) {
-			check_quit = this->startPause(graph, 0, 0, this);
+			this->startPause(graph);
 			check_start = 0;
 		}
 		this->playBombs();

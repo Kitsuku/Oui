@@ -22,53 +22,55 @@ Player::Player()
 {
 }
 
-bool    Player::defineUpDownAction(const irr::SEvent::SJoystickEvent &keys,
-        std::vector<AObject *> objects)
+bool	Player::defineUpDownAction(const irr::SEvent::SJoystickEvent &keys,
+	std::vector<AObject *> objects)
 {
-        bool    hasMoved = true;
+	bool	hasMoved = false;
 
-        if (keys.Axis[irr::SEvent::SJoystickEvent::AXIS_Y] < -10000) {
-                this->_action = Action::UP;
-                this->doAction(objects);
-                hasMoved = true;
-        } else if (keys.Axis[irr::SEvent::SJoystickEvent::AXIS_Y] > 10000) {
-                this->_action = Action::DOWN;
-                this->doAction(objects);
-                hasMoved = true;
-        }
-        return hasMoved;
+	if (keys.Axis[irr::SEvent::SJoystickEvent::AXIS_Y] < -10000) {
+		this->_action = Action::UP;
+		this->doAction(objects);
+		hasMoved = true;
+	} else if (keys.Axis[irr::SEvent::SJoystickEvent::AXIS_Y] > 10000) {
+		this->_action = Action::DOWN;
+		this->doAction(objects);
+		hasMoved = true;
+	}
+	return hasMoved;
 }
 
-bool    Player::defineLeftRightAction(const irr::SEvent::SJoystickEvent &keys,
-        std::vector<AObject *> objects)
+bool	Player::defineLeftRightAction(const irr::SEvent::SJoystickEvent &keys,
+	std::vector<AObject *> objects)
 {
-        bool    hasMoved = false;
+	bool	hasMoved = false;
 
-        if (keys.Axis[irr::SEvent::SJoystickEvent::AXIS_X] < -10000) {
-                this->_action = Action::LEFT;
-                this->doAction(objects);
-                hasMoved = true;
-        }  else if (keys.Axis[irr::SEvent::SJoystickEvent::AXIS_X] > 10000) {
-                this->_action = Action::RIGHT;
-                this->doAction(objects);
-                hasMoved = true;
-        }
-        return hasMoved;
+	if (keys.Axis[irr::SEvent::SJoystickEvent::AXIS_X] < -10000) {
+		this->_action = Action::LEFT;
+		this->doAction(objects);
+		hasMoved = true;
+	}  else if (keys.Axis[irr::SEvent::SJoystickEvent::AXIS_X] > 10000) {
+		this->_action = Action::RIGHT;
+		this->doAction(objects);
+		hasMoved = true;
+	}
+	return hasMoved;
 }
 
-AObject *Player::defineAction(
-        const irr::SEvent::SJoystickEvent &keys, std::vector<AObject *> objects)
+AObject	*Player::defineAction(
+	const irr::SEvent::SJoystickEvent &keys, std::vector<AObject *> objects)
 {
-        AObject *bomb;
-        bool    hasMoved = false;
+	AObject	*bomb;
+	bool	hasMoved = false;
 
-        hasMoved = defineUpDownAction(keys, objects);
-        if (hasMoved != false)
-                hasMoved = defineLeftRightAction(keys, objects);
-        if (keys.IsButtonPressed(1) && _nbrPutBomb < _nbrMaxBomb) {
-                this->_action = Action::PUTBOMB;
-                bomb = this->doAction(objects);
-                return bomb;
-        }
-        return nullptr;
+	hasMoved = defineUpDownAction(keys, objects);
+	if (hasMoved == false)
+		hasMoved = defineLeftRightAction(keys, objects);
+	if (keys.IsButtonPressed(1) && _nbrPutBomb < _nbrMaxBomb) {
+		this->_action = Action::PUTBOMB;
+		bomb = this->doAction(objects);
+		return bomb;
+	} else if (hasMoved == false){
+		this->_action = Action::IDLE;
+	}
+	return nullptr;
 }

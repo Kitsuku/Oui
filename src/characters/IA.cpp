@@ -5,6 +5,9 @@
 ** method of the class IA
 */
 
+#ifdef WIN32
+#define __attribute__(A)
+#endif
 #include "enumObjectType.hpp"
 #include "Bomb.hpp"
 #include "IA.hpp"
@@ -283,9 +286,7 @@ AObject	*IA::defineAction(__attribute__((unused)) const
 	modifyPos();
 	if (justMoove(objects) == 1)
 		action = 1;
-	if (action == 0 && _nbrMaxBomb != _nbrPutBomb) {
-		std::cout << "IA nb " << _nbrPlayer << " put bomb" << std::endl;
-		_action = Action::PUTBOMB;
-	}
+/*	if (action == 0 && _nbrMaxBomb != _nbrPutBomb)
+		_action = Action::PUTBOMB;*/
 	return doAction(objects);
 }

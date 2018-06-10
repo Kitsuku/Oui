@@ -8,34 +8,15 @@
 #include "Bonus.hpp"
 #include "AObject.hpp"
 
-bonusBombUp::bonusBombUp(Positions pos, std::string lifeSprite)
+Bonus::Bonus(Positions pos, std::string lifeSprite, objectType type)
 {
 	this->_livingSprites = lifeSprite;
 	this->_isDestroyed = false;
 	this->_position = pos;
-	this->_objectType = objectType::BOMBUP;
+	this->_objectType = type;
 }
 
-bonusSpeedUp::bonusSpeedUp(Positions pos, std::string lifeSprite)
+void	Bonus::destroy()
 {
-	this->_livingSprites = lifeSprite;
-	this->_isDestroyed = false;
-	this->_position = pos;
-	this->_objectType = objectType::SPEEDUP;
-}
-
-bonusFireUp::bonusFireUp(Positions pos, std::string lifeSprite)
-{
-	this->_livingSprites = lifeSprite;
-	this->_isDestroyed = false;
-	this->_position = pos;
-	this->_objectType = objectType::FIREUP;
-}
-
-bonusWallPass::bonusWallPass(Positions pos, std::string lifeSprite)
-{
-	this->_livingSprites = lifeSprite;
-	this->_isDestroyed = false;
-	this->_position = pos;
-	this->_objectType = objectType::WALLPASS;
+	this->_isDestroyed = true;
 }
