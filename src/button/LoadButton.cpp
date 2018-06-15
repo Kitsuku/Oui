@@ -89,7 +89,7 @@ void	loadButtonSelection(std::vector<std::string> files, Graphics *graph)
 			return;
 		graph->end();
 	}
-	map.loadMapFromSave(path + files.at(ite_file));
+	map.loadMapFromSave(path + files.at(ite_file));	
 	map.play(graph);
 }
 

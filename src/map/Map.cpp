@@ -64,8 +64,9 @@ std::vector<ACharacter *>	Map::getAllCharacters()
 {
 	std::vector<ACharacter *>	allCharacters;
 
-	for (int it = 0; it != getNbCharacter(); it++)
+	for (int it = 0; it != getNbCharacter(); it++) {
 		allCharacters.push_back(getCharacter(it));
+	}
 	return allCharacters;
 }
 
@@ -348,6 +349,7 @@ std::unique_ptr<ACharacter>	loadCharacter(nlohmann::json j)
 
 void	Map::loadMapFromSave(std::string fileName)
 {
+	std::cout << "Debut" << std::endl;
 	std::ifstream	file(fileName);
 	nlohmann::json	j;
       
@@ -369,6 +371,7 @@ void	Map::loadMapFromSave(std::string fileName)
 			file.close();
 		}
 	}
+	std::cout << "Fin" << std::endl;
 }
 
 void	Map::setSpriteGroundAndBackGround()

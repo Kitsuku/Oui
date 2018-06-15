@@ -47,7 +47,9 @@ void					Graphics::displayMap(
 	if (!_firstTime) {
 		displayCharacter(characters, sizeMap);
 	} else {
+		std::cout << "oui" << std::endl;
 		createCharactersNode(characters, sizeMap);
+		std::cout << "end" << std::endl;
 		_firstTime = false;
 	}
 	for (auto it = _playerStruct.begin(); it != _playerStruct.end(); it++) {

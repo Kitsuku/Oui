@@ -56,7 +56,7 @@ public:
 	void	checkDeleteCharac();
 	void	addNewElem(AObject *object);
 	void	giveActionToCharac(const std::vector<irr::SEvent::SJoystickEvent> &joystickData);
-	void	startPause(Graphics *);
+	int	startPause(Graphics *, int, int, Map *);
 	unsigned int	countCharacters();
 	void	updateBombTimer(Bomb *, unsigned int);
 	AObject	*updateBombPower(AObject *);
