@@ -34,6 +34,7 @@ ACharacter::ACharacter(int numberPlayer, Positions pos,
 	this->_wallPass = false;
 	this->_isDead = false;
 	this->_action = IDLE;
+	this->_delayDead = 0;
 }
 
 ACharacter::ACharacter()
@@ -142,23 +143,34 @@ bool	ACharacter::getIsDead()
 	return _isDead;
 }
 
+unsigned int			ACharacter::getDelayDead()
+{
+	return _delayDead;
+}
+
+void				ACharacter::addDelayDead()
+{
+	++_delayDead;
+}
+
+
 AObject	*ACharacter::doAction(std::vector<AObject *> objects)
 {
 	void	(ACharacter::*func_ptr[5])(std::vector<AObject *>);
-	AObject	*bomb(new Bomb(this->_nbrPlayer, this->_fireRange,
-		this->_position, this->_bombLiveSprites,
-		this->_bombDeathSprites));
+	AObject	*bomb;
 
 	func_ptr[0] = &ACharacter::moveLeft;
-	func_ptr[1] = &ACharacter::moveRight;
-	func_ptr[2] = &ACharacter::moveUp;
+	func_ptr[1] = &ACharacter::moveUp;
+	func_ptr[2] = &ACharacter::moveRight;
 	func_ptr[3] = &ACharacter::moveDown;
 	if (this->_action <= 3) {
 		(*this.*func_ptr[this->_action])(objects);
 	} else if (this->_action == Action::PUTBOMB) {
-		this->putBomb(objects);
+		bomb = this->putBomb(objects);
+		//this->_action = Action::IDLE;
 		return bomb;
 	}
+	//this->_action = Action::IDLE;
 	return nullptr;
 }
 
@@ -166,28 +178,35 @@ void	ACharacter::checkBonus(std::vector<AObject *> objects)
 {
 	int	object_on_pos = getObjectAtPosition(
 		floor(_position.x), floor(_position.y), objects);
-	objectType	type;
+	objectType	type = objectType::UNBRWALL;
+	bool	hasTaken = false;
 
 	if (object_on_pos == -1)
 		return;
 	type = objects[object_on_pos]->getObjectType();
 	if (type == objectType::BOMBUP) {
 		this->_nbrMaxBomb += 1;
+		hasTaken = true;
 	} else if (type == objectType::FIREUP) {
 		this->_fireRange += 1;
+		hasTaken = true;
 	} else if (type == objectType::SPEEDUP) {
 		this->_speed += 0.1;
+		hasTaken = true;
+	} else if (type == objectType::WALLPASS) {
+		_wallPass = true;
+		hasTaken = true;
 	}
-	_wallPass = (type == objectType::WALLPASS) ?
-		(true) : (false);
+	if (hasTaken == true)
+		objects[object_on_pos]->destroy();
 }
 
 bool	checkIsBonus(AObject *object)
 {
-	if (object->getObjectType() != objectType::BOMBUP ||
-	object->getObjectType() != objectType::SPEEDUP ||
-	object->getObjectType() != objectType::FIREUP ||
-	object->getObjectType() != objectType::WALLPASS)
+	if (object->getObjectType() == objectType::BOMBUP ||
+	object->getObjectType() == objectType::SPEEDUP ||
+	object->getObjectType() == objectType::FIREUP ||
+	object->getObjectType() == objectType::WALLPASS)
 		return true;
 	return false;
 }
@@ -195,19 +214,19 @@ bool	checkIsBonus(AObject *object)
 void	ACharacter::moveLeft(std::vector<AObject *> objects)
 {
 	AObject		*object = nullptr;
-	Positions	pos = { 0, 0 };
+	Positions	pos = {0, 0};
 	int		idx = getObjectAtPosition(
 		floor(_position.x) - 1, floor(_position.y), objects);
 
-	object = (idx != -1) ? (objects[idx]) : (object);
+	if (idx != -1)
+		object = objects[idx];
 	pos = (idx != -1) ? (object->getPos()) : (pos);
-	if (idx != -1 && _wallPass == false) {
+	if (idx != -1 && _wallPass == false && checkIsBonus(object) != true) {
 		if (floor(_position.y) != pos.y ||
 		(this->_position.x - this->_speed) <= (pos.x + 1))
 			return ;
-	} else if (idx != -1 && _wallPass == true) {
+	} else if (idx != -1 && _wallPass == true && checkIsBonus(object) != true) {
 		if (object->getObjectType() != objectType::WALL &&
-		checkIsBonus(object) != true &&
 		(floor(_position.y) != pos.y ||
 		(this->_position.x - this->_speed) <= (pos.x + 1)))
 			return ;
@@ -219,19 +238,19 @@ void	ACharacter::moveLeft(std::vector<AObject *> objects)
 void	ACharacter::moveRight(std::vector<AObject *> objects)
 {
 	AObject		*object = nullptr;
-	Positions	pos = { 0, 0 };
+	Positions	pos = {0, 0};
 	int		idx = getObjectAtPosition(
-		ceil(_position.x) + 1, floor(_position.y), objects);
+		floor(_position.x) + 1, floor(_position.y), objects);
 
-	object = (idx != -1) ? (objects[idx]) : (object);
+	if (idx != -1)
+		object = objects[idx];
 	pos = (idx != -1) ? (object->getPos()) : (pos);
-	if (idx != -1 && _wallPass == false) {
+	if (idx != -1 && _wallPass == false && checkIsBonus(object) != true) {
 		if (floor(_position.y) != pos.y ||
 		(_position.x + _speed) >= (pos.x - 1))
 			return ;
-	} else if (idx != -1 && _wallPass == true) {
+	} else if (idx != -1 && _wallPass == true && checkIsBonus(object) != true) {
 		if (object->getObjectType() != objectType::WALL &&
-		checkIsBonus(object) != true &&
 		(floor(_position.y) != pos.y ||
 		(_position.x + _speed) >= (pos.x - 1)))
 			return ;
@@ -243,19 +262,19 @@ void	ACharacter::moveRight(std::vector<AObject *> objects)
 void	ACharacter::moveUp(std::vector<AObject *> objects)
 {
 	AObject		*object = nullptr;
-	Positions	pos = { 0, 0 };
+	Positions	pos = {0, 0};
 	int		idx = getObjectAtPosition(
 		floor(_position.x), floor(_position.y) - 1, objects);
 
-	object = (idx != -1) ? (objects[idx]) : (object);
+	if (idx != -1)
+		object = objects[idx];
 	pos = (idx != -1) ? (object->getPos()) : (pos);
-	if (idx != -1 && _wallPass == false) {
+	if (idx != -1 && _wallPass == false && checkIsBonus(object) != true) {
 		if (floor(_position.x) != pos.x ||
 		(this->_position.y - this->_speed) <= (pos.y + 1))
 			return ;
-	} else if (idx != -1 && _wallPass == true) {
+	} else if (idx != -1 && _wallPass == true && checkIsBonus(object) != true) {
 		if (object->getObjectType() != objectType::WALL &&
-		checkIsBonus(object) != true &&
 		(floor(_position.x) != pos.x ||
 		(this->_position.y - this->_speed) <= (pos.y + 1)))
 			return ;
@@ -267,19 +286,19 @@ void	ACharacter::moveUp(std::vector<AObject *> objects)
 void	ACharacter::moveDown(std::vector<AObject *> objects)
 {
 	AObject		*object = nullptr;
-	Positions	pos = { 0, 0 };
+	Positions	pos = {0, 0};
 	int		idx = getObjectAtPosition(
-		floor(_position.x), ceil(_position.y) + 1, objects);
+		floor(_position.x), floor(_position.y) + 1, objects);
 
-	object = (idx != -1) ? (objects[idx]) : (object);
+	if (idx != -1)
+		object = objects[idx];
 	pos = (idx != -1) ? (object->getPos()) : (pos);
-	if (idx != -1 && _wallPass == false) {
+	if (idx != -1 && _wallPass == false && checkIsBonus(object) != true) {
 		if (floor(_position.x) != pos.x ||
 		(this->_position.y + this->_speed) >= (pos.y - 1))
 			return ;
-	} else if (idx != -1 && _wallPass == true) {
+	} else if (idx != -1 && _wallPass == true && checkIsBonus(object) != true) {
 		if (object->getObjectType() != objectType::WALL &&
-		checkIsBonus(object) != true &&
 		(floor(_position.x) != pos.x ||
 		(this->_position.y + this->_speed) >= (pos.y - 1)))
 			return ;
@@ -294,23 +313,23 @@ void	ACharacter::removePutBomb()
 		this->_nbrPutBomb -= 1;
 }
 
-std::unique_ptr<AObject>	ACharacter::putBomb(
-				std::vector<AObject *> objects)
+AObject	*ACharacter::putBomb(std::vector<AObject *> objects)
 {
 	int		idx = getObjectAtPosition(
 				floor(_position.x),
 				floor(_position.y), objects);
-	std::unique_ptr<AObject>	new_bomb(new Bomb(this->_nbrPlayer,
-					this->_fireRange,
-					this->_position, this->_bombLiveSprites,
-					this->_bombDeathSprites));
+	Positions	new_pos = { round(this->_position.x),
+				round(this->_position.y) };
+	AObject		*obj;
+	Bomb		*bomb(new Bomb(this->_nbrPlayer,
+		this->_fireRange, new_pos, this->_bombLiveSprites,
+		this->_bombDeathSprites));
 
-	this->_action = Action::IDLE;
 	if (this->_nbrPutBomb < this->_nbrMaxBomb && idx == -1) {
+		obj = static_cast<AObject *>(bomb);
 		this->_nbrPutBomb += 1;
-		return new_bomb;
+		return obj;
 	}
-	new_bomb.reset();
 	return nullptr;
 }
 

@@ -24,9 +24,9 @@ public:
 	/* Destructor */
 	~ACharacter();
 	/* Methods */
-	virtual AObject		*defineAction(const
+	virtual AObject	*defineAction(const
 		irr::SEvent::SJoystickEvent &, std::vector<AObject *>) = 0;
-	AObject			*doAction(std::vector<AObject *>);
+	AObject				*doAction(std::vector<AObject *>);
 	void				setNbrPlayer(int);
 	void				setPos(Positions);
 	void				setSprites(std::vector<std::string>);
@@ -47,11 +47,13 @@ public:
 	bool				getWallPass();
 	bool				getIsDead();
 	int				getFireRange();
+	unsigned int			getDelayDead();
+	void				addDelayDead();
 	void				moveLeft(std::vector<AObject *>);
 	void				moveRight(std::vector<AObject *>);
 	void				moveUp(std::vector<AObject *>);
 	void				moveDown(std::vector<AObject *>);
-	std::unique_ptr<AObject>	putBomb(std::vector<AObject *>);
+	AObject				*putBomb(std::vector<AObject *>);
 	void				checkDeath(std::vector<AObject *>);
 	void				checkBonus(std::vector<AObject *>);
 	void				removePutBomb();
@@ -69,6 +71,7 @@ protected:
 	std::vector<std::string>	_sprites;
 	std::string			_bombLiveSprites;
 	std::string			_bombDeathSprites;
+	unsigned int			_delayDead;
 };
 
 #endif

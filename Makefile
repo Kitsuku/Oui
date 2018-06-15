@@ -42,7 +42,8 @@ SRC	=	src/main.cpp	\
 		src/button/SaveGestionButton.cpp	\
 		src/button/SoloButton.cpp	\
 		src/button/SoundButton.cpp	\
-		src/button/StartButton.cpp	\
+		src/button/StartSoloButton.cpp	\
+		src/button/StartMultiButton.cpp	\
 		src/graphics/Graphics.cpp	\
 		src/graphics/MyEvent.cpp	\
 		src/graphics/MyException.cpp	\

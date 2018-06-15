@@ -30,9 +30,9 @@ public:
 	/* Methods */
 	AObject	*defineAction(const irr::SEvent::SJoystickEvent &,
 			std::vector<AObject *>);
-	void	defineUpDownAction(const irr::SEvent::SJoystickEvent &,
+	bool	defineUpDownAction(const irr::SEvent::SJoystickEvent &,
 			std::vector<AObject *>);
-	void	defineLeftRightAction(const irr::SEvent::SJoystickEvent &,
+	bool	defineLeftRightAction(const irr::SEvent::SJoystickEvent &,
 			std::vector<AObject *>);
 };
 

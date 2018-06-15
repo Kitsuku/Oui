@@ -4,6 +4,7 @@ IF(WIN32)
   include_directories(include include/Menu include/Button include/Graphics include/objects include/Irrlicht json-develop/single_include/nlohmann /user/X11R6/include)
   set (SRC
     src/main.cpp
+    src/Launcher.cpp
     src/checkDie.cpp
     src/getObjectAtPosition.cpp
     src/usefullGestionFct.cpp)
@@ -45,7 +46,8 @@ IF(WIN32)
     src/button/SaveGestionButton.cpp
     src/button/SoloButton.cpp
     src/button/SoundButton.cpp
-    src/button/StartButton.cpp)
+    src/button/StartMultiButton.cpp
+    src/button/StartSoloButton.cpp)
   set (GRAPHICSRC
     src/graphics/Graphics.cpp
     src/graphics/MyEvent.cpp
@@ -64,6 +66,7 @@ ELSE(WIN32)
   project(bomberman)
   include_directories(include include/Menu include/Button include/Graphics include/objects include/Irrlicht json-develop/single_include/nlohmann /user/X11R6/include)
   set (SRC
+    src/Launcher.cpp
     src/main.cpp
     src/checkDie.cpp
     src/getObjectAtPosition.cpp
@@ -97,7 +100,8 @@ ELSE(WIN32)
     src/button/SaveGestionButton.cpp
     src/button/SoloButton.cpp
     src/button/SoundButton.cpp
-    src/button/StartButton.cpp)
+    src/button/StartSoloButton.cpp
+    src/button/StartMultiButton.cpp)
   set (GRAPHICSRC
     src/graphics/Graphics.cpp
     src/graphics/MyEvent.cpp

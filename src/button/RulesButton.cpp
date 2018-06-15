@@ -6,6 +6,7 @@
 //
 
 #include "RulesButton.hpp"
+#include "menu.hpp"
 #include "PauseMenu.hpp"
 
 RulesButton::RulesButton()
@@ -20,8 +21,16 @@ RulesButton::~RulesButton()
 void	RulesButton::action(Graphics *graph)
 {
 	std::unique_ptr<AMenu> pause (new PauseMenu);
+	int	check_a;
 
 	_menu = std::move(pause);
-	graph = graph;
-	//Appel DisplaySprite
+	while (graph->begin() && check_a != 2) {
+		const std::vector<irr::SEvent::SJoystickEvent>
+			&joystickData = graph->getController();
+		check_a = ButtonUnpressed(joystickData, check_a, 0);
+		graph->displayBackground("res/Rules.png");
+		graph->displayText("PRESS A TO GO BACK",
+				{1500, 60, 200, 30}, {100, 255, 255, 255});
+		graph->end();
+	}
 }

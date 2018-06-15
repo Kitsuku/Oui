@@ -8,9 +8,9 @@
 #ifndef SAVEBUTTON_HPP_
 # define SAVEBUTTON_HPP_
 
-#include "Map.hpp"
 #include "AMenu.hpp"
 #include "AButton.hpp"
+#include "Map.hpp"
 
 class SaveButton : public AButton
 {
@@ -19,7 +19,7 @@ public:
 	~SaveButton();
 
 	void	action(Graphics *);
-	void	save(Map);
+	void	save(Map *);
 };
 
 #endif /* !SAVEBUTTON_HPP_ */

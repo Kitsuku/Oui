@@ -11,6 +11,7 @@
 #include "objects/Positions.hpp"
 #include "ACharacter.hpp"
 #include "Bomb.hpp"
+#include "Wall.hpp"
 #include "objects/AObject.hpp"
 #include "Graphics.hpp"
 #include <vector>
@@ -42,18 +43,28 @@ public:
 	std::vector<Positions>	coordForUnbrWall();
 	int	getNbMapElem() { return _map.size(); }
 	int	getNbCharacter() { return _characters.size(); }
+	int	getNbCharacterAlive();
 	void	addMapElem(std::unique_ptr<AObject> obj) { _map.push_back(std::move(obj)); }
 	void	addCharacter(std::unique_ptr<ACharacter> charac) { _characters.push_back(std::move(charac)); }
 	void	play(Graphics *);
 	void	playObjects();
+	void	checkBreakWalls(Wall *);
+	void	playWalls();
+	void	playBombs();
+	void	removeNbrBombCharacter(AObject *);
 	void	checkDeleteObjects();
+	void	checkDeleteCharac();
 	void	addNewElem(AObject *object);
 	void	giveActionToCharac(const std::vector<irr::SEvent::SJoystickEvent> &joystickData);
 	void	startPause(Graphics *);
 	unsigned int	countCharacters();
 	void	updateBombTimer(Bomb *, unsigned int);
-	void	updateBombPower(Bomb *);
+	AObject	*updateBombPower(AObject *);
 	void	setSpriteGroundAndBackGround();
+	void	AddBonus(AObject *);
+	std::string getBackground();
+	std::string getGround();
+	int getNbIAAlive();
 
 protected:
 	std::vector<std::unique_ptr<AObject>>		_map;

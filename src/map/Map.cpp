@@ -24,6 +24,16 @@
 #include <iostream>
 #include <fstream>
 
+std::string	Map::getBackground()
+{
+	return _backGround;
+}
+
+std::string	Map::getGround()
+{
+	return _ground;
+}
+
 void    openFieldStartChara(Positions *coord)
 {
 	if ((coord->y == 0 && coord->x == 10) ||
@@ -57,6 +67,32 @@ std::vector<ACharacter *>	Map::getAllCharacters()
 	for (int it = 0; it != getNbCharacter(); it++)
 		allCharacters.push_back(getCharacter(it));
 	return allCharacters;
+}
+
+int	Map::getNbCharacterAlive()
+{
+	int	nb = 0;
+	int	lenVector = 0;
+
+	for (auto it = _characters.begin(); it != _characters.end(); it++) {
+		if ((_characters[lenVector].get()->getNbrPlayer()) > 0)
+		    nb += 1;
+		lenVector += 1;
+	}
+	return nb;
+}
+
+int	Map::getNbIAAlive()
+{
+	int	nb = 0;
+	int	lenVector = 0;
+
+	for (auto it = _characters.begin(); it != _characters.end(); it++) {
+		if ((_characters[lenVector].get()->getNbrPlayer()) < 0)
+			nb += 1;
+		lenVector += 1;
+	}	
+	return nb;
 }
 
 std::vector<Positions>	Map::coordForUnbrWall()
@@ -220,7 +256,7 @@ void	saveCharacter(ACharacter *character, std::string fileName)
 	j["type"] = "Character";
 	j["playerNbr"] = character->getNbrPlayer();
 	j["maxBombNbr"] = character->getNbrMaxBomb();
-	j["putbBmbNbr"] = character->getNbrPutBomb();
+	j["putBombNbr"] = character->getNbrPutBomb();
 	j["fireRange"] = character->getFireRange();
 	j["speed"] = character->getSpeed();
 	j["wallPass"] = character->getWallPass();
@@ -314,7 +350,9 @@ void	Map::loadMapFromSave(std::string fileName)
 {
 	std::ifstream	file(fileName);
 	nlohmann::json	j;
-
+      
+	std::cout << "filename = " << fileName << std::endl;
+	setSpriteGroundAndBackGround();
 	while (file) {
 		try {
 			file >> j;
@@ -335,7 +373,6 @@ void	Map::loadMapFromSave(std::string fileName)
 
 void	Map::setSpriteGroundAndBackGround()
 {
-	std::cout << "JEPASSEICI" << std::endl;
 	std::ifstream	file(".conf", std::ios::in);
 	std::string	buffer;
 
