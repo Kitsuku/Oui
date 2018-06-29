@@ -5,12 +5,12 @@
 ** classBonus declaration
 */
 
+#ifndef BONUS_HPP_
+# define BONUS_HPP_
+
 #include <vector>
 #include "Positions.hpp"
 #include "AObject.hpp"
-
-#ifndef BONUS_HPP_
-# define BONUS_HPP_
 
 class	Bonus : public AObject
 {

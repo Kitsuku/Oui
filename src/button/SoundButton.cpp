@@ -5,14 +5,9 @@
 // SoundButton functions
 //
 
-#ifdef WIN32
-#include <io.h>
-#include "dirent_windows.h"
-#else
+#include <sys/types.h>
 #include <dirent.h>
 #include <unistd.h>
-#endif
-#include <sys/types.h>
 #include <cstdlib>
 #include <fstream>
 #include "SoundButton.hpp"
@@ -80,8 +75,8 @@ void	displaySoundInterface(Graphics *graph, int ite_sound)
 	graph->displayImage("res/Bomberman_artwork.png", {25, 360, 700, 700});
 	graph->displayImage("res/Bomberman_Title.png", {300, 25, 1280, 355});
 	graph->displayBox({890, 400, 200, 600}, {100, 0, 255, 0});
-	graph->displayBox({(((float)890.0, (float)400.0, (float)200.0, (float)(60.0 * (10.0 - ite_sound))))}, {(float)100.0, (float)0.0, (float)0.0, (float)0.0});
-	graph->displayBox({(float)890.0, (float)400.0, (float)200.0, (float)(60.0 * (10.0 - ite_sound))}, {(float)100.0, (float)0.0, (float)0.0, (float)255.0});
+	graph->displayBox({890, 400, 200, (60 * (10 - ite_sound))}, {100, 0, 0, 0});
+	graph->displayBox({890, 400, 200, (60 * (10 - ite_sound))}, {100, 0, 0, 255});
 	graph->displayText("VOLUME: ", {890, 1020, 200, 30}, {100, 255, 255, 255});
 	graph->displayText(std::to_string(ite_sound), {1050, 1020, 200, 30}, {100, 255, 255, 255});
 	graph->displayText("PRESS B TO GO BACK ", {1500, 1020, 200, 30}, {100, 255, 255, 255});
@@ -89,11 +84,11 @@ void	displaySoundInterface(Graphics *graph, int ite_sound)
 
 void	SoundButton::action(Graphics *graph)
 {
-	std::unique_ptr<AMenu> option (new OptionMenu);
+	std::unique_ptr<AMenu> option = std::make_unique<OptionMenu>();
 	int	check_b = 0;
-
 	unsigned int	ite_sound = getSoundConf();
 	std::vector<std::string>	file_content;
+
 	_menu = std::move(option);
 	while (check_b != 2 && graph->begin()) {
 		const std::vector<irr::SEvent::SJoystickEvent>

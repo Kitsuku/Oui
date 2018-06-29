@@ -5,14 +5,9 @@
 // GroundButton functions
 //
 
-#ifdef WIN32
-#include <io.h>
-#include "dirent_windows.h"
-#else
+#include <sys/types.h>
 #include <dirent.h>
 #include <unistd.h>
-#endif
-#include <sys/types.h>
 #include <cstdlib>
 #include <fstream>
 #include "SoloMenu.hpp"
@@ -80,7 +75,7 @@ std::vector<std::string>	getConfGroundContent()
 
 void	SoloGroundButton::action(Graphics *graph)
 {
-	std::unique_ptr<AMenu>	solo_menu (new SoloMenu);
+	std::unique_ptr<AMenu>	solo_menu = std::make_unique<SoloMenu>();
 	std::vector<std::string>	file_content;
 	std::vector<std::string>	files;
 	unsigned int			ite = 0;

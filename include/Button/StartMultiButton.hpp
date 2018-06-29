@@ -18,6 +18,10 @@ public:
 	~StartMultiButton();
 
 	void	action(Graphics *);
+private:
+	void	trailer(Graphics *);
+	void	commandsLoading(Graphics *);
+	void	rulesLoading(Graphics *);
 };
 
 #endif /* !STARTMULTIBUTTON_HPP_ */

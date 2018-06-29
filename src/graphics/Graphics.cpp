@@ -12,10 +12,9 @@
 
 Graphics::Graphics(const std::string &path): _path(path), _nbrAlive(0)
 {
-	std::unique_ptr<irr::IrrlichtDevice>		tmpDevice =
-					std::unique_ptr<irr::IrrlichtDevice>(
-					irr::createDevice(irr::video::
-					EDT_NULL));
+	std::unique_ptr<irr::IrrlichtDevice>	tmpDevice =
+		std::unique_ptr<irr::IrrlichtDevice>(
+		irr::createDevice(irr::video::EDT_NULL));
 
 	if (!tmpDevice) {
 		throw MyException("Can't create a device");
@@ -38,18 +37,15 @@ Graphics::~Graphics()
 {
 }
 
-void					Graphics::displayMap(
-					const std::vector<ACharacter *>
-					&characters,
-					const std::vector<AObject *> &objects,
-					const Positions sizeMap)
+void	Graphics::displayMap(const std::vector<ACharacter *> &characters,
+		const std::vector<AObject *> &objects, const Positions sizeMap)
 {
+	std::string			unbrWall;
+
 	if (!_firstTime) {
 		displayCharacter(characters, sizeMap);
 	} else {
-		std::cout << "oui" << std::endl;
-		createCharactersNode(characters, sizeMap);
-		std::cout << "end" << std::endl;
+		createCharactersNode(characters, sizeMap);		
 		_firstTime = false;
 	}
 	for (auto it = _playerStruct.begin(); it != _playerStruct.end(); it++) {
@@ -60,21 +56,26 @@ void					Graphics::displayMap(
 	for (auto it = objects.begin(); it != objects.end(); it++) {
 		displayObject((*it), sizeMap);
 	}
+	for (auto it = objects.begin(); it != objects.end(); it++) {
+		if ((*it)->getObjectType() == UNBRWALL) {
+			unbrWall = _path + (*it)->getLivingSprites();
+			break;
+		}
+	}
+	displayBorder(unbrWall, sizeMap);
 }
 
-void					Graphics::displayBackground(
-					const std::string textureName) const
+void	Graphics::displayBackground(const std::string textureName) const
 {
 	std::string			fullPath = _path + textureName;
-	irr::core::rect< irr::s32 >	rectTexture(0 , 0, _screenSize.Width,
-					_screenSize.Height);
+	irr::core::rect<irr::s32>	rectTexture(0 , 0, _screenSize.Width,
+						_screenSize.Height);
 
 	_driver->draw2DImage(_driver->getTexture(fullPath.c_str()),
 	rectTexture, rectTexture);
 }
 
-void					Graphics::displayGround(
-					const std::string &textureName)
+void	Graphics::displayGround(const std::string &textureName)
 {
 	const std::string		fullPath = _path + textureName;
 	irr::scene::ISceneNode		*cube = _smgr->addCubeSceneNode(
@@ -93,35 +94,30 @@ void					Graphics::displayGround(
 	}
 }
 
-void					Graphics::displayImage(
-					const std::string textureName,
-					const rect_t &imageRect) const
+void	Graphics::displayImage(const std::string textureName,
+		const rect_t &imageRect) const
 {
 	std::string			fullPath = _path + textureName;
-	irr::core::rect< irr::s32 >	sourceRect(0 , 0,  imageRect.sizeX,
+	irr::core::rect<irr::s32>	sourceRect(0 , 0,  imageRect.sizeX,
 					imageRect.sizeY);
-	irr::core::rect< irr::s32 >	destRect(imageRect.posX, imageRect.posY,
+	irr::core::rect<irr::s32>	destRect(imageRect.posX, imageRect.posY,
 					imageRect.posX + imageRect.sizeX,
 					imageRect.posY + imageRect.sizeY);
 
-	_driver->draw2DImage(_driver->getTexture(fullPath.c_str()),
-	destRect, sourceRect);
+	irr::video::ITexture* images = _driver->getTexture(fullPath.c_str());
+	_driver->draw2DImage(images, irr::core::position2d<irr::s32>(imageRect.posX,imageRect.posY), sourceRect, 0, irr::video::SColor(255,255,255,255), true);
 }
 
-void					Graphics::displayBox(const rect_t &box,
-					const color_t &color) const
+void	Graphics::displayBox(const rect_t &box, const color_t &color) const
 {
 	_driver->draw2DRectangle(irr::video::SColor(color.opacity, color.red,
 				color.green, color.blue),
                 		irr::core::rect<irr::s32>(box.posX, box.posY,
 				box.posX + box.sizeX, box.posY + box.sizeY));
-
 }
 
-void					Graphics::displayText(
-					const std::string &text,
-					const rect_t &rectText,
-					const color_t &color)
+void	Graphics::displayText(const std::string &text, const rect_t &rectText,
+		const color_t &color)
 {
 	_font->draw(text.c_str(),
 	irr::core::rect<irr::s32>(rectText.posX, rectText.posY, rectText.sizeX,
@@ -129,7 +125,7 @@ void					Graphics::displayText(
 	irr::video::SColor(color.opacity, color.red, color.green, color.blue));
 }
 
-bool					Graphics::begin() const
+bool	Graphics::begin() const
 {
 	if (_device->run()) {
 		_driver->beginScene();
@@ -141,7 +137,7 @@ bool					Graphics::begin() const
 	return false;
 }
 
-bool					Graphics::end(void)
+bool	Graphics::end(void)
 {
 	if (_device->run()) {
 		_smgr->drawAll();
@@ -156,20 +152,24 @@ bool					Graphics::end(void)
 	return false;
 }
 
-const MyEvent				&Graphics::getEventReceiver(void)
-					const
+const MyEvent	&Graphics::getEventReceiver(void) const
 {
 	return _eventReceiver;
 }
 
+const std::string	&Graphics::getPath() const
+{
+	return _path;
+}
+
 const std::vector<irr::SEvent::SJoystickEvent>
-					&Graphics::getController(void) const
+	&Graphics::getController(void) const
 {
 	return _eventReceiver.getJoystickState();
 }
 
 
-void					Graphics::initAttribut()
+void	Graphics::initAttribut()
 {
 	_driver = _device->getVideoDriver();
 	_smgr = _device->getSceneManager();
@@ -184,10 +184,8 @@ void					Graphics::initAttribut()
 	}
 }
 
-void					Graphics::displayCharacter(
-					const std::vector<ACharacter *>
-					&character,
-					const Positions &sizeMap)
+void	Graphics::displayCharacter(const std::vector<ACharacter *> &character,
+		const Positions &sizeMap)
 {
 	auto				playerStruct =
 					_playerStruct.begin();
@@ -207,10 +205,8 @@ void					Graphics::displayCharacter(
 	}
 }
 
-void					Graphics::createCharactersNode(
-					const std::vector<ACharacter *>
-					&characters,
-					const Positions &sizeMap)
+void	Graphics::createCharactersNode(const std::vector<ACharacter *>
+		&characters, const Positions &sizeMap)
 {
 	if (characters.size() == 0) {
 		throw MyException ("No characters to create");
@@ -223,9 +219,8 @@ void					Graphics::createCharactersNode(
 	}
 }
 
-void					Graphics::displayFirstCharacter(
-					ACharacter *character,
-					const Positions &sizeMap)
+void	Graphics::displayFirstCharacter(ACharacter *character,
+		const Positions &sizeMap)
 {
 	std::vector<std::string>		objectPath;
 	coord_t					coord;
@@ -243,11 +238,9 @@ void					Graphics::displayFirstCharacter(
 	createAnimeCharacter(mesh, objectPath, coord);
 }
 
-void					Graphics::createAnimeCharacter(
-					irr::scene::IAnimatedMesh *mesh,
-					const std::vector<std::string>
-					&objectPath,
-					const coord_t &coord)
+void	Graphics::createAnimeCharacter(irr::scene::IAnimatedMesh *mesh,
+		const std::vector<std::string> &objectPath,
+		const coord_t &coord)
 {
 	irr::scene::IAnimatedMeshSceneNode	*character;
 
@@ -266,10 +259,9 @@ void					Graphics::createAnimeCharacter(
 }
 
 
-void					Graphics::displayMovingCharacter(
-					ACharacter *character,
-					std::vector<PlayerStruct>::iterator playerIt,
-					const Positions &sizeMap)
+void	Graphics::displayMovingCharacter(ACharacter *character,
+		std::vector<PlayerStruct>::iterator playerIt,
+		const Positions &sizeMap)
 {
 	if (character->getIsDead() && playerIt->oldAction != 100) {
 		_characterNode[playerIt->index]->setMD2Animation(DEAD);
@@ -279,9 +271,7 @@ void					Graphics::displayMovingCharacter(
 	}
 }
 
-void					Graphics::removePlayerStruct(
-					const std::vector<ACharacter *>
-					&character)
+void	Graphics::removePlayerStruct(const std::vector<ACharacter *> &character)
 {
 	auto				characterIt =
 					character.begin();
@@ -295,7 +285,6 @@ void					Graphics::removePlayerStruct(
 			nbrAlive++;
 		}
 		if (nbrAlive >= _nbrAlive && it->isAlive == true) {
-			//_characterNode[it->index]->remove();
 			_characterNode[it->index]->setVisible(false);
 			it->isAlive = false;
 		}
@@ -304,10 +293,9 @@ void					Graphics::removePlayerStruct(
 	}
 }
 
-void					Graphics::displayAliveCharacter
-(					ACharacter *character,
-					std::vector<PlayerStruct>::iterator playerIt,
-					const Positions &sizeMap)
+void	Graphics::displayAliveCharacter(ACharacter *character,
+		std::vector<PlayerStruct>::iterator playerIt,
+		const Positions &sizeMap)
 {
 	const Action			action = character->getAction();
 	const coord_t			coord = createCoord(
@@ -331,10 +319,8 @@ void					Graphics::displayAliveCharacter
 	playerIt->oldAction = action;
 }
 
-void					Graphics::rotateCharacter(
-					const Action oldAction,
-					const Action action,
-					const unsigned int index)
+void	Graphics::rotateCharacter(const Action oldAction,
+		const Action action, const unsigned int index)
 {
 	if (oldAction == LEFT || oldAction == RIGHT || oldAction == UP
 	|| oldAction == DOWN) {
@@ -343,9 +329,7 @@ void					Graphics::rotateCharacter(
 	}
 }
 
-void					Graphics::displayObject(
-					AObject *object,
-					const Positions &sizeMap)
+void	Graphics::displayObject(AObject *object, const Positions &sizeMap)
 {
 	std::string			fullPath;
 	Bomb				*bomb;
@@ -366,9 +350,21 @@ void					Graphics::displayObject(
 	}
 }
 
-void					Graphics::displayBomb(
-					Bomb *bomb,
-					const Positions &sizeMap)
+void	Graphics::displayBorder(const std::string &unbWall,
+		const Positions &sizeMap)
+{
+	Positions			borderPos = {-1, -1};
+
+	for (float i = -1; i <= sizeMap.x; i++) {
+		for (float j = -1; j <= sizeMap.y; j ++) {
+			if (j == -1 || j == sizeMap.y || i == -1 || i == sizeMap.x) {
+				displayCube(unbWall, {i, j}, sizeMap);
+			}
+		}
+	}
+}
+
+void	Graphics::displayBomb(Bomb *bomb, const Positions &sizeMap)
 {
 	const std::string		fullPath = _path +
 					bomb->getLivingSprites();
@@ -388,10 +384,8 @@ void					Graphics::displayBomb(
 	}
 }
 
-void					Graphics::displayMeshBomb(
-					irr::scene::IAnimatedMesh *mesh,
-					const coord_t &coord,
-					const Positions &sizeMap)
+void	Graphics::displayMeshBomb(irr::scene::IAnimatedMesh *mesh,
+		const coord_t &coord, const Positions &sizeMap)
 {
 	irr::scene::IAnimatedMeshSceneNode	*animeBomb;
 
@@ -410,9 +404,7 @@ void					Graphics::displayMeshBomb(
 }
 
 
-void					Graphics::displayExplosion(
-					Bomb *bomb,
-					const Positions &sizeMap)
+void	Graphics::displayExplosion(Bomb *bomb, const Positions &sizeMap)
 {
 	const std::string		fullPath = _path +
 					bomb->getDyingSprites();
@@ -431,9 +423,8 @@ void					Graphics::displayExplosion(
 	displayVerticalExplosion(bomb, sizeMap);
 }
 
-void					Graphics::displayVerticalExplosion(
-					Bomb *bomb,
-					const Positions &sizeMap)
+void	Graphics::displayVerticalExplosion(Bomb *bomb,
+		const Positions &sizeMap)
 {
 	const std::string		fullPath = _path +
 					bomb->getDyingSprites();
@@ -452,26 +443,22 @@ void					Graphics::displayVerticalExplosion(
 	displayCube(fullPath, posBomb, sizeMap);
 }
 
-void					Graphics::displayCube(
-					const std::string &image,
-					const Positions &position,
-					const Positions &sizeMap)
+void	Graphics::displayCube(const std::string &image,
+		const Positions &position, const Positions &sizeMap)
 {
-	const coord_t				coord = createCoord(position,
-						sizeMap);
-
+	coord_t	coord = createCoord(position, sizeMap);
 	irr::scene::ISceneNode		*cube = _smgr->addCubeSceneNode(1, 0,
 					-1, irr::core::vector3df (coord.x,
 					coord.y, coord.z), irr::core::vector3df
 					(MAP_Y, 0, 0), irr::core::vector3df
 					(MAP_X / sizeMap.x, MAP_Y /
 					sizeMap.y, 1));
+
 	setCube(image, cube);
 }
 
-void					Graphics::setCube(
-					const std::string &image,
-					irr::scene::ISceneNode *cube)
+void	Graphics::setCube(const std::string &image,
+		irr::scene::ISceneNode *cube)
 {
 	if (cube) {
 		cube->setMaterialTexture(0, _driver->getTexture(image.c_str()));
@@ -482,24 +469,19 @@ void					Graphics::setCube(
 	}
 }
 
-const coord_t				Graphics::createCoord(
-					const Positions &position,
-					const Positions &sizeMap) const
+const coord_t	Graphics::createCoord(const Positions &position,
+			const Positions &sizeMap) const
 {
-	const coord_t				coord = {static_cast<float>
-						(position.x * MAP_X /
-						sizeMap.x - MAP_X / 2 + 0.5),
-						static_cast<float>
-						((position.y * MAP_Y /
-						sizeMap.y - MAP_Y / 2) * -1 -
-						0.5),
-						static_cast<float>
-						(MAP_X - (1 - MAP_Y / MAP_X)
-						* position.y)};
+	const coord_t	coord = {static_cast<float>(position.x * MAP_X /
+		sizeMap.x - MAP_X / 2 + 0.5),
+		static_cast<float>((position.y * MAP_Y / sizeMap.y - MAP_Y / 2)
+		* -1 - 0.5), static_cast<float>(MAP_X - (1 - MAP_Y / MAP_X)
+		* position.y)};
+
 	return coord;
 }
 
-void					Graphics::clear_list()
+void	Graphics::clear_list()
 {
 	for (auto it = _sceneNode.begin(); it != _sceneNode.end(); it++) {
 		(*it)->remove();
@@ -516,7 +498,7 @@ void					Graphics::clear_list()
 	_sceneNode.clear();
 }
 
-void					Graphics::reset()
+void	Graphics::reset()
 {
 	_nbrAlive = 0;
 	for (auto it = _characterNode.begin(); it != _characterNode.end();

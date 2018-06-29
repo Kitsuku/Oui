@@ -13,8 +13,9 @@
 #include <iostream>
 #include "Wall.hpp"
 #include "Bomb.hpp"
-#include "checkDie.hpp"
+#include "checkDeath.hpp"
 #include "AObject.hpp"
+#include <exception>
 
 Wall::Wall(Positions pos, std::string lifeSprite,
 	std::string deathSprite)
@@ -28,12 +29,18 @@ Wall::Wall(Positions pos, std::string lifeSprite,
 
 void	Wall::checkBreak(AObject *object)
 {
-	Bomb	*bomb;
+	Bomb	*bomb = nullptr;
+	checkDeath	check_death;
+	objectType	type;
 
+	if (object == nullptr)
+	 	return ;
+	type = object->getObjectType();
 	if (object->getObjectType() == objectType::BOMB &&
 	object->getIsDestroyed() == true) {
-		bomb = (Bomb *)object;
-		if (checkDie(_position, bomb->getPos(), bomb)) {
+		bomb = static_cast<Bomb *>(object);
+		if (bomb != nullptr &&
+		check_death.checkDie(_position, bomb->getPos(), bomb)) {
 			this->destroy();
 		}
 	}

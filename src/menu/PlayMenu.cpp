@@ -13,10 +13,10 @@
 
 PlayMenu::PlayMenu()
 {
-	std::unique_ptr<AButton> solo (new SoloButton);
-	std::unique_ptr<AButton> multi (new MultiButton);
-	std::unique_ptr<AButton> load (new LoadButton);
-	std::unique_ptr<AButton> return_mm (new ReturnMmButton);
+	std::unique_ptr<AButton> solo = std::make_unique<SoloButton>();
+	std::unique_ptr<AButton> multi = std::make_unique<MultiButton>();
+	std::unique_ptr<AButton> load = std::make_unique<LoadButton>();
+	std::unique_ptr<AButton> return_mm = std::make_unique<ReturnMmButton>();
 
 	_buttons.push_back(std::move(solo));
 	_buttons.push_back(std::move(multi));

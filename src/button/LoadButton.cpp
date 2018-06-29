@@ -5,15 +5,9 @@
 // LoadButton functions
 //
 
-#ifdef WIN32
-#include <io.h>
-#include "dirent_windows.h"
-#else
+#include <sys/types.h>
 #include <dirent.h>
 #include <unistd.h>
-#endif
-#include <sys/types.h>
-#include "msleep.h"
 #include "Map.hpp"
 #include "LoadButton.hpp"
 #include "PlayMenu.hpp"
@@ -59,11 +53,11 @@ int	SwitchPageLoad(int ite_file, std::vector<std::string> files, unsigned int pa
 	if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_X] < -10000
 	&& page > 0) {
 		page -= 1;
-		msleep(500);
+		usleep(500000);
 	} else if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_X] > 10000
 		&& (page * 4) <  files.size()) {
 		page += 1;
-		msleep(500);
+		usleep(500000);
 	}
 	return page;
 }
@@ -74,8 +68,7 @@ void	loadButtonSelection(std::vector<std::string> files, Graphics *graph)
 	int	check_a = 0;
 	int	check_b = 0;
 	unsigned int	page = 0;
-	Map	map(1, 1);
-	std::string	path = "./save/";
+	Map	map(13, 11, graph->getPath());
 
 	while(check_a != 2 && graph->begin()) {
 		displayLoad(graph, files, ite_file, page);
@@ -89,20 +82,21 @@ void	loadButtonSelection(std::vector<std::string> files, Graphics *graph)
 			return;
 		graph->end();
 	}
-	map.loadMapFromSave(path + files.at(ite_file));	
+	std::cout << "ite_file : " << files.at(ite_file) << std::endl;
+	map.loadMapFromSave(files.at(ite_file));
+	std::cout << "Map load" << std::endl;
 	map.play(graph);
 }
 
 void	LoadButton::action(Graphics *graph)
 {
-	std::unique_ptr<AMenu> play_menu (new PlayMenu);
+	std::unique_ptr<AMenu> play_menu = std::make_unique<PlayMenu>();
 	struct dirent	*dirp;
 	std::vector<std::string>	files;
 	DIR	*dir;
 
-	graph = graph;
 	_menu = std::move(play_menu);
-	dir = opendir("save");
+	dir = opendir((graph->getPath() + "/save").c_str());
 	if (!dir)
 		return;
 	dirp = readdir(dir);

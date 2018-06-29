@@ -5,9 +5,9 @@
 ** Event functions
 */
 
+#include <iostream>
 #include "MyEvent.hpp"
 
-#include <iostream>
 MyEvent::MyEvent()
 {
 	irr::SEvent	initEvent;
@@ -31,7 +31,7 @@ bool	MyEvent::OnEvent(const irr::SEvent& event)
 	}
 	for (unsigned int i = 0; i < NBR_CONTROLLER; i++) {
 		if (event.EventType == irr::EET_JOYSTICK_INPUT_EVENT
-		&& event.JoystickEvent.Joystick == i) {
+		    && event.JoystickEvent.Joystick == i) {
 			_joystickState[i] = event.JoystickEvent;
 		}
 	}
@@ -43,8 +43,8 @@ bool	MyEvent::isKeyDown(const irr::EKEY_CODE keyCode) const
 	return _key[keyCode];
 }
 
-const std::vector<irr::SEvent::SJoystickEvent>
-&MyEvent::getJoystickState(void) const
+const std::vector<irr::SEvent::SJoystickEvent> &MyEvent::getJoystickState(void)
+	const
 {
 	return _joystickState;
 }

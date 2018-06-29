@@ -5,12 +5,12 @@
 ** classUnbrWall declaration
 */
 
+#ifndef CLASSUNBRWALL_HPP_
+# define CLASSUNBRWALL_HPP_
+
 #include <vector>
 #include "Positions.hpp"
 #include "AObject.hpp"
-
-#ifndef CLASSUNBRWALL_HPP_
-# define CLASSUNBRWALL_HPP_
 
 class	UnbrWall : public AObject
 {

@@ -15,10 +15,10 @@
 
 PauseMenu::PauseMenu()
 {
-	std::unique_ptr<AButton> resume (new ResumeButton);
-	std::unique_ptr<AButton> command (new DisplayCommandButton);
-	std::unique_ptr<AButton> rules (new RulesButton);
-	std::unique_ptr<AButton> sound (new PauseSoundButton);
+	std::unique_ptr<AButton> resume = std::make_unique<ResumeButton>();
+	std::unique_ptr<AButton> command = std::make_unique<DisplayCommandButton>();
+	std::unique_ptr<AButton> rules = std::make_unique<RulesButton>();
+	std::unique_ptr<AButton> sound = std::make_unique<PauseSoundButton>();
 
 	_buttons.push_back(std::move(resume));
 	_buttons.push_back(std::move(command));

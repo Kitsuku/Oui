@@ -19,7 +19,7 @@ OptionButton::~OptionButton()
 
 void	OptionButton::action(Graphics *graph)
 {
-	std::unique_ptr<AMenu> option (new OptionMenu);
+	std::unique_ptr<AMenu> option = std::make_unique<OptionMenu>();
 
 	_menu = std::move(option);
 	graph = graph;

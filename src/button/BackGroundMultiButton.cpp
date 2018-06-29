@@ -5,14 +5,9 @@
 // BackGroundButton functions
 //
 
-#ifdef WIN32
-#include <io.h>
-#include "dirent_windows.h"
-#else
+#include <sys/types.h>
 #include <dirent.h>
 #include <unistd.h>
-#endif
-#include <sys/types.h>
 #include <cstdlib>
 #include <fstream>
 #include "MultiMenu.hpp"
@@ -80,7 +75,7 @@ std::vector<std::string>	getConfBackgroundMultiContent()
 
 void	BackGroundMultiButton::action(Graphics *graph)
 {
-	std::unique_ptr<AMenu>	multi_menu (new MultiMenu);
+	std::unique_ptr<AMenu>	multi_menu = std::make_unique<MultiMenu>();
 	std::vector<std::string>	file_content;
 	std::vector<std::string>	files;
 	unsigned int			ite = 0;

@@ -5,12 +5,8 @@
 // SaveButton functions
 //
 
-#ifdef WIN32
-#include "dirent_windows.h"
-#else
-#include <dirent.h>
-#endif
 #include <sys/types.h>
+#include <dirent.h>
 #include <ctime>
 #include "Map.hpp"
 #include "SaveButton.hpp"
@@ -27,14 +23,15 @@ SaveButton::~SaveButton()
 
 void	SaveButton::save(Map *map)
 {
-	std::unique_ptr<AMenu>	pause (new PauseMenu);
+	std::unique_ptr<AMenu>	pause = std::make_unique<PauseMenu>();
 	time_t			now = time(0);
 	std::string		actual_time = ctime(&now);
-	std::string		path = "./save/";
+	std::string		path = map->getPath() + "/save/";
 	size_t			ite = 0;
 
 	_menu = std::move(pause);
-	if (map->getNbCharacterAlive() == 1)
+	std::cout << "getNbrCharacter : " << map->getNbCharacter();
+	if (map->getNbCharacter() == 1)
 		path.append("solo_");
 	else
 		path.append("mutli_");
@@ -52,13 +49,13 @@ void	SaveButton::save(Map *map)
 		ite = path.find(' ', ite);
 	}
 	path.append(".json");
-	std::cout << path << std::endl;
+	std::cout << "save : " << path << std::endl;
 	map->saveMap(path);
 }
 
 void	SaveButton::action(Graphics *graph)
 {
-	std::unique_ptr<AMenu>	pause (new PauseMenu);
+	std::unique_ptr<AMenu>	pause = std::make_unique<PauseMenu>();
 
 	_menu = std::move(pause);
 	graph = graph;

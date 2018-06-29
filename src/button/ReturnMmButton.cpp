@@ -19,7 +19,7 @@ ReturnMmButton::~ReturnMmButton()
 
 void	ReturnMmButton::action(Graphics *graph)
 {
-	std::unique_ptr<AMenu> main (new MainMenu);
+	std::unique_ptr<AMenu> main = std::make_unique<MainMenu>();
 
 	_menu = std::move(main);
 	graph = graph;

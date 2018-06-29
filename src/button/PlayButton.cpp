@@ -19,7 +19,7 @@ PlayButton::~PlayButton()
 
 void	PlayButton::action(Graphics *graph)
 {
-	std::unique_ptr<AMenu> play_menu (new PlayMenu);
+	std::unique_ptr<AMenu> play_menu = std::make_unique<PlayMenu>();
 
 	_menu = std::move(play_menu);
 	graph = graph;

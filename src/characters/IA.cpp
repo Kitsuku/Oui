@@ -25,266 +25,242 @@ IA::~IA()
 {
 }
 
-int	IA::checkFireRangeUP(Bomb *bomb, float pos_x, float pos_y)
+bool	isBomb(objectType type)
 {
-	int	power = bomb->getPower("up");
-	Positions	pos = bomb->getPos();
-
-	if (floor(pos_x) == floor(pos.x) && pos_y <= pos.y + power &&
-	    pos_y >= pos.y) 
-		return 1;
-	return 0;
+	if (type == BOMB)
+		return true;
+	return false;
 }
 
-int	IA::checkFireRangeDown(Bomb *bomb, float pos_x, float pos_y)
+bool    isUnbrWall(objectType type)
 {
-	int	power = bomb->getPower("down");
-	Positions	pos = bomb->getPos();
-
-	if (floor(pos_x) == floor(pos.x) && pos_y >= pos.y - power &&
-	    pos_y <= pos.y)
-		return 2;
-	return 0;
+	if (type == UNBRWALL)
+                return true;
+        return false;
 }
 
-int	IA::checkFireRangeRight(Bomb *bomb, float pos_x, float pos_y)
+int	searchInMap(std::vector<AObject *> objects, float x, float y)
 {
-	int	power = bomb->getPower("right");
-	Positions	pos = bomb->getPos();
+	int	tempIt = 0;
+	Positions	cpy;
 
-	if (pos_x <= pos.x + power && pos_x >= pos.x &&
-	    floor(pos_y) == floor(pos.y))
-		return 3;
-	return 0;
-}
-
-int	IA::checkFireRangeLeft(Bomb *bomb, float pos_x, float pos_y)
-{
-	int	power = bomb->getPower("right");
-	Positions	pos = bomb->getPos();
-
-	if (pos_x >= pos.x - power && pos_x <= pos.x &&
-	    floor(pos_y) == floor(pos.y))
-		return 4;
-	return 0;
-}
-
-int	IA::checkFire(AObject *object)
-{
-	Bomb		*bomb = static_cast<Bomb*>(object);
-
-	if (checkFireRangeUP(bomb, floor(_position.x),
-		floor(_position.y)) != 0)
-		return 1;
-	else if (checkFireRangeDown(bomb, floor(_position.x),
-		floor(_position.y)) != 0)
-		return 2;
-	else if (checkFireRangeRight(bomb, floor(_position.x),
-		floor(_position.y)) != 1)
-		return 3;
-	return checkFireRangeLeft(bomb, floor(_position.x), floor(_position.y));
-}
-
-int	IA::inBombRange(std::vector<AObject *> objects)
-{
-	std::vector<AObject *>::iterator	ite;
-	int					bomb = 0;
-	int					fire = 0;
-
-	for (ite = objects.begin(); ite != objects.end(); ite++) {
-		if ((*ite)->getObjectType() == BOMB)
-			bomb = 1;
-		fire = checkFire(*ite);
-		if (bomb == 1 && fire != 0) {
-			safePosition(*ite, objects, fire);
+	if (x > 12 || x < 0 || y > 10 || y < 0)
+		return -3;
+	for (auto it = objects.begin(); it != objects.end(); it += 1) {
+		cpy = objects.at(tempIt)->getPos();
+		if (cpy.x == x &&
+		    cpy.y == y &&
+		    objects.at(tempIt)->getObjectType() == WALL)
 			return 1;
+		else if (cpy.x == x &&
+			 cpy.y == y &&
+			 isBomb(objects.at(tempIt)->getObjectType()))
+			return -1;
+		else if (cpy.x == x &&
+                         cpy.y == y &&
+                         isUnbrWall(objects.at(tempIt)->getObjectType()))
+			return -2;
+		tempIt += 1;
+	}
+	return 0;
+}
+
+bool	WallOnTheLeft(std::vector<AObject *> objects, Positions pos)
+{
+	int	cpyX = pos.x;
+	int	cpyY = pos.y;
+
+	while (cpyX >= 0) {
+		switch (searchInMap(objects, cpyX, cpyY))
+                {
+	        case 1 : return true;
+                case -1 : return false;
+                case -2 : return false;
+                case -3 : return false;
+                }
+		cpyX -= 1;
+	}
+	return false;
+}
+
+bool	WallOnTheRight(std::vector<AObject *> objects, Positions pos)
+{
+        int	cpyX = pos.x;
+        int	cpyY = pos.y;
+
+        while (cpyX <= 12) {
+		switch (searchInMap(objects, cpyX, cpyY))
+                {
+	        case 1 : return true;
+                case -1 : return false;
+                case -2 : return false;
+                case -3 : return false;
+                }
+                cpyX += 1;
+        }
+        return false;
+}
+
+bool	WallOnTheTop(std::vector<AObject *> objects, Positions pos)
+{
+        int	cpyX = pos.x;
+        int	cpyY = pos.y;
+
+        while (cpyY >= 0) {
+		switch (searchInMap(objects, cpyX, cpyY))
+		{
+		case 1 : return true;
+		case -1 : return false;
+		case -2 : return false;
+		case -3 : return false;
+		}
+                cpyY -= 1;
+        }
+        return false;
+}
+
+bool	WallOnTheBot(std::vector<AObject *> objects, Positions pos)
+{
+        int	cpyX = pos.x;
+        int	cpyY = pos.y;
+
+        while (cpyY <= 10) {
+		switch (searchInMap(objects, cpyX, cpyY))
+                {
+	        case 1 : return true;
+                case -1 : return false;
+                case -2 : return false;
+                case -3 : return false;
+                }
+                cpyY += 1;
+        }
+        return false;
+}
+
+void	IA::isThereAWall(std::vector<AObject *> objects)
+{
+	Positions       cpy = _position;
+
+	cpy.x = round(cpy.x);
+	cpy.y = round(cpy.y);
+	if (WallOnTheLeft(objects, cpy)) {
+		_action = LEFT;
+		_oldDir = RIGHT;
+	}
+	else if (WallOnTheRight(objects, cpy)) {
+		_action = RIGHT;
+		_oldDir = LEFT;
+        }
+	else if (WallOnTheTop(objects, cpy)) {
+		_action = UP;
+		_oldDir = DOWN;
+        }
+	else if (WallOnTheBot(objects, cpy)) {
+		_action = DOWN;
+		_oldDir = UP;
+        }
+}
+
+bool	IA::isNextToWall(std::vector<AObject *> objects)
+{
+	Positions	cpy = _position;
+
+	cpy.x = round(cpy.x);
+	cpy.y = round(cpy.y);
+	if (_action == LEFT && cpy.x > 0) {
+		if (searchInMap(objects, cpy.x - 1, cpy.y) == 1) {
+			return true;
 		}
 	}
-	return 0;
+	if (_action == RIGHT && cpy.x < 12) {
+		if (searchInMap(objects, cpy.x + 1, cpy.y) == 1)
+			return true;
+	}
+	if (_action == UP && cpy.y > 0) {
+		if (searchInMap(objects, cpy.x, cpy.y - 1) == 1)
+			return true;
+	}
+	if (_action == DOWN && cpy.y < 10) {
+		if (searchInMap(objects, cpy.x, cpy.y + 1) == 1)
+			return true;
+	}
+	return false;
 }
 
-int	IA::checkThisPosition(std::vector<AObject *> objects,
-	int pos_x, int pos_y)
+void	IA::timeToRun(std::vector<AObject *> objects)
 {
-	Positions				position;
-	std::vector<AObject *>::iterator	ite;
-	objectType				type;
-	int					position_x;
-	int					position_y;
+	_action = _oldDir;
+	_oldAction = PUTBOMB;
+	if (_action == LEFT)
+		_oldDir == RIGHT;
+	else if (_action == RIGHT)
+		_oldDir = LEFT;
+	else if (_action == UP)
+		_oldDir = DOWN;
+	else if (_action == DOWN)
+		_oldDir = UP;
+}
 
-	for (ite = objects.begin(); ite != objects.end(); ite += 1) {
-		position = (*ite)->getPos();
-		position_x = floor(position.x);
-		position_y = floor(position.y);
-		type = (*ite)->getObjectType();
-		if (((position_x == pos_x && position_y == pos_y) &&
-		     (type == BOMB || type == UNBRWALL ||
-		      (type == WALL && _wallPass == false))) ||
-		    pos_x < 0 || pos_x > 12 || pos_y < 0 || pos_y > 10) {
-			return 0;
+bool	IA::isSafeWay(std::vector<AObject *> objects)
+{
+	int	posX;
+        int	posY;
+
+	posX = floor(_position.x);
+	posY = floor(_position.y);	
+	if (_action == LEFT || _action == RIGHT) {
+		if (posY > 0 && searchInMap(objects, posX, posY - 1) == 0) {
+			_oldAction = _action;
+			_action = UP;
+			_oldDir = DOWN;
+			return true;
+		}
+		else if (posY < 10 && searchInMap(objects, posX, posY + 1) == 0) {
+			_oldAction = _action;
+			_action = DOWN;
+			_oldDir = UP;
+			return true;
 		}
 	}
-	return 1;
-}
-
-void	IA::checkPosUP(Bomb *bomb, std::vector<AObject *> objects)
-{
-	if (checkThisPosition(objects, checkPosX(floor(_position.x)) - 1,
-			      checkPosY(floor(_position.y))) == 1)
-		_action = Action::LEFT;
-	else if (checkThisPosition(objects, checkPosX(floor(_position.x)) + 1,
-				   checkPosY(floor(_position.y))) == 1)
-		_action = Action::RIGHT;
-	else if (checkThisPosition(objects, checkPosX(floor(_position.x)),
-				   checkPosY(floor(_position.y)) - 1) == 1)
-		_action = Action::UP;
-}
-
-void	IA::checkPosDown(Bomb *bomb, std::vector<AObject *> objects)
-{
-	if (checkThisPosition(objects, checkPosX(floor(_position.x)) - 1,
-			      checkPosY(floor(_position.y))) == 1)
-		_action = Action::LEFT;
-	else if (checkThisPosition(objects, checkPosX(floor(_position.x)) + 1,
-				   checkPosY(floor(_position.y))) == 1)
-		_action = Action::RIGHT;
-	else if (checkThisPosition(objects, checkPosX(floor(_position.x)),
-				   checkPosY(floor(_position.y)) + 1) == 1)
-		_action = Action::DOWN;
-}
-
-void	IA::checkPosRight(Bomb *bomb, std::vector<AObject *> objects)
-{
-	if (checkThisPosition(objects, checkPosX(floor(_position.x)),
-			      checkPosY(floor(_position.y)) - 1) == 1)
-		_action = Action::UP;
-	else if (checkThisPosition(objects, checkPosX(floor(_position.x)),
-				   checkPosY(floor(_position.y)) + 1) == 1)
-		_action = Action::DOWN;
-	else if (checkThisPosition(objects, checkPosX(floor(_position.x)) + 1,
-				   checkPosY(floor(_position.y))) == 1)
-		_action = Action::RIGHT;
-}
-
-void	IA::checkPosLeft(Bomb *bomb, std::vector<AObject *> objects)
-{
-	if (checkThisPosition(objects, checkPosX(floor(_position.x)),
-			      checkPosY(floor(_position.y)) - 1) == 1)
-		_action = Action::UP;
-	else if (checkThisPosition(objects, checkPosX(floor(_position.x)),
-				   checkPosY(floor(_position.y)) + 1) == 1)
-		_action = Action::DOWN;
-	else if (checkThisPosition(objects, checkPosX(floor(_position.x)) - 1,
-				   checkPosY(floor(_position.y))) == 1)
-		_action = Action::LEFT;
-}
-
-void	IA::safePosition(AObject *object, std::vector<AObject *> objects,
-			 int fire)
-{
-	Bomb		*bomb = static_cast<Bomb*>(object);
-	
-	if (fire == 1) {
-		checkPosUP(bomb, objects);
+	else if (_action == UP || _action == DOWN) {
+		if (posX < 12 && searchInMap(objects, posX + 1, posY) == 0) {
+			_oldAction = _action;
+                        _action	= RIGHT;
+			_oldDir = LEFT;
+			return true;
+	        }	
+                else if	(posX > 0 && searchInMap(objects, posX - 1, posY) == 0) {
+			_oldAction = _action;
+                        _action	= LEFT;
+			_oldDir = RIGHT;
+			return true;
+                }
 	}
-	else if (fire == 2) {
-		checkPosDown(bomb, objects);
-	}
-	else if (fire == 3) {
-		checkPosRight(bomb, objects);
-	}
-	checkPosLeft(bomb, objects);
-}
-
-int	IA::moveAwayFromThisPosition(std::vector<AObject *> objects,
-				     int pos_x, int pos_y)
-{
-	if (checkThisPosition(objects, pos_x + 1, pos_y) == 1) {
-		_action = Action::RIGHT;
-		return 1;
-	} else if (checkThisPosition(objects, pos_x - 1, pos_y) == 1) {
- 		_action = Action::LEFT;
-		return 1;
-	}
-	return 0;
-}
-
-int	IA::moveFromThisPosition(std::vector<AObject *> objects,
-				 int pos_x, int pos_y)
-{
-	if (checkThisPosition(objects, pos_x, pos_y - 1) == 1) {
-		_action = Action::UP;
-		return 1;
-	} else if (checkThisPosition(objects, pos_x, pos_y + 1) == 1) {
-		_action = Action::DOWN;
-		return 1;
-	}
-	return moveAwayFromThisPosition(objects, pos_x, pos_y);
-}
-
-int	IA::checkPosX(int pos_x)
-{
-	if (pos_x < _position.x && _action == Action::LEFT)
-		pos_x += 1;
-	return pos_x;
-}
-
-int	IA::checkPosY(int pos_y)
-{
-	if (pos_y < _position.y && _action == Action::UP)
-		pos_y += 1;
-	return pos_y;
-}
-
-int	IA::checkAround(std::vector<AObject *> objects, int pos_x, int pos_y)
-{
-	int	check = 0;
-
-	pos_x = checkPosX(pos_x);
-	pos_y = checkPosY(pos_y);
-	check += checkThisPosition(objects, pos_x + 1, pos_y);
-	check += checkThisPosition(objects, pos_x - 1, pos_y);
-	check += checkThisPosition(objects, pos_x, pos_y + 1);
-	check += checkThisPosition(objects, pos_x, pos_y - 1);
-	return check;
-}
-
-int	IA::justMoove(std::vector<AObject *> objects)
-{
-	if (checkThisPosition(objects, floor(_position.x),
-			      floor(_position.y)) == 0)
-		return moveFromThisPosition(objects,
-					    checkPosX(floor(_position.x)),
-					    checkPosY(floor(_position.y)));
-	else if (inBombRange(objects) == 1)
-		return 1;
-	else if (checkAround(objects, floor(_position.x),
-		floor(_position.y)) > 0)
-		return moveFromThisPosition(objects,
-					    checkPosX(floor(_position.x)),
-					    checkPosY(floor(_position.y)));
-	return 0;
-}
-
-void	IA::modifyPos()
-{
-	if (_position.x - floor(_position.x) > 0.09 &&
-		_position.x - floor(_position.x) < 0.1)
-		_position.x =  floor(_position.x);
-	if (_position.y - floor(_position.y) > 0.09 &&
-		_position.y - floor(_position.y) < 0.1)
-		_position.y =  floor(_position.y);
+	return false;
 }
 
 AObject	*IA::defineAction(__attribute__((unused)) const
 			  irr::SEvent::SJoystickEvent &key, std::vector<AObject *> objects)
 {
-	int	action = 0;
-
-	modifyPos();
-	if (justMoove(objects) == 1)
-		action = 1;
-	if (action == 0 && _nbrMaxBomb != _nbrPutBomb)
-		_action = Action::PUTBOMB;
+	//Le joueur vient de poser une bombe et doit s'en aller
+	if (_action == PUTBOMB) {
+		timeToRun(objects);
+	}
+	//Le joueur est entrain de partir, il doit trouver un endroit pour se mettre à l'abri
+	else if (_oldAction == PUTBOMB) {
+                isSafeWay(objects);
+	}
+	//Si le joueur est entrain de courir et qu'il n'est pas prêt d'un mur
+	else if (_oldAction != PUTBOMB && isNextToWall(objects) == false) {
+		isThereAWall(objects);
+	}
+	//Si le joueur est au contact d'un mur
+	else if (isNextToWall(objects) == true) {
+		if (_nbrMaxBomb > _nbrPutBomb) {
+			_action = PUTBOMB;
+		}
+		else
+			_oldAction = IDLE;
+	}
 	return doAction(objects);
 }

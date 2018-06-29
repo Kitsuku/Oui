@@ -5,12 +5,12 @@
 ** classWall declarations
 */
 
+#ifndef CLASSWALL_HPP_
+# define CLASSWALL_HPP_
+
 #include <vector>
 #include "Positions.hpp"
 #include "AObject.hpp"
-
-#ifndef CLASSWALL_HPP_
-# define CLASSWALL_HPP_
 
 class	Wall : public AObject
 {

@@ -24,6 +24,26 @@ void	Launcher::setPath(const std::string &path)
 	_path = path;
 }
 
+void	Launcher::splashScreen(Graphics *graph)
+{
+	int	check_start = 0;
+	int	flashing = 0;
+
+	while (graph->begin() && check_start != 2) {
+		const std::vector<irr::SEvent::SJoystickEvent>
+			&joystickData = graph->getController();
+		check_start = ButtonUnpressed(joystickData, check_start, 7);
+		graph->displayBackground("res/splash.jpg");
+		if (flashing >= 0 && flashing <= 40)
+			graph->displayText("PESS START TO CONTINUE",
+			{675, 800, 200, 30}, {255, 255, 255, 255});
+		flashing += 1;
+		if (flashing > 80)
+			flashing = 0;
+		graph->end();
+	}
+}
+
 void	Launcher::launch()
 {
 	std::unique_ptr<AMenu> main_menu (new MainMenu);
@@ -32,6 +52,7 @@ void	Launcher::launch()
 	Graphics	graph(_path);
 	int		check = 0;
 
+	this->splashScreen(&graph);
 	while (menu && graph.begin()) {
 		const std::vector<irr::SEvent::SJoystickEvent>
 			&joystickData = graph.getController();

@@ -5,6 +5,8 @@
 ** player class
 */
 
+#ifndef PLAYER_HPP_
+# define PLAYER_HPP_
 
 #ifdef WIN32
 #include <io.h>
@@ -13,13 +15,10 @@
 #endif
 #include <iostream>
 #include <stdio.h>
+#include <irrlicht.h>
 #include "AObject.hpp"
-#include "Graphics.hpp"
 #include "ACharacter.hpp"
 #include "MyException.hpp"
-
-#ifndef PLAYER_HPP_
-# define PLAYER_HPP_
 
 class Player : public ACharacter
 {

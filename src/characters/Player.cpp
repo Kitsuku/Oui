@@ -59,7 +59,7 @@ bool	Player::defineLeftRightAction(const irr::SEvent::SJoystickEvent &keys,
 AObject	*Player::defineAction(
 	const irr::SEvent::SJoystickEvent &keys, std::vector<AObject *> objects)
 {
-	AObject	*bomb;
+	AObject	*bomb = nullptr;
 	bool	hasMoved = false;
 
 	hasMoved = defineUpDownAction(keys, objects);

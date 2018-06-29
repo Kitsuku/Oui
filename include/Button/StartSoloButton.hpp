@@ -18,6 +18,10 @@ public:
 	~StartSoloButton();
 
 	void	action(Graphics *);
+private:
+	void	trailer(Graphics *);
+	void	commandsLoading(Graphics *);
+	void	rulesLoading(Graphics *);
 };
 
 #endif /* !STARTSOLOBUTTON_HPP_ */

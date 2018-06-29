@@ -19,7 +19,7 @@ MultiButton::~MultiButton()
 
 void	MultiButton::action(Graphics *graph)
 {
-	std::unique_ptr<AMenu> multi (new MultiMenu);
+	std::unique_ptr<AMenu> multi = std::make_unique<MultiMenu>();
 
 	_menu = std::move(multi);
 	graph = graph;

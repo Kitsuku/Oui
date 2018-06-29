@@ -35,7 +35,7 @@ void		AMenu::displayButtonName(Graphics *graph, unsigned int size)
 {
 	unsigned int	ite = 0;
 	rect_t	coord = {950, 425, 300, 50};
-	color_t	color = {100, 255, 255, 255};
+	color_t	color = {255, 255, 255, 255};
 
 	while (ite < size) {
 	graph->displayText(this->getButton(ite)->getName(), coord, color);

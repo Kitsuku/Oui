@@ -1,16 +1,16 @@
-//
-// EPITECH PROJECT, 2018
-// Indie Studio
-// File description:
-// Fct Gestion
-//
+/*
+** EPITECH PROJECT, 2018
+** Indie Studio
+** File description:
+** Fct Gestion
+*/
 
 #ifdef WIN32
 #include <io.h>
-#define VALUE_MSLEEP 500
+#define VALUE_MSLEEP 150
 #else
 #include <unistd.h>
-#define VALUE_MSLEEP 500
+#define VALUE_MSLEEP 150
 #endif
 #include "msleep.h"
 #include "AMenu.hpp"
@@ -44,11 +44,11 @@ unsigned int	MoveButtonFromMenu(unsigned int ite_button, AMenu *menu,
                                    std::vector<irr::SEvent::SJoystickEvent> joystickData)
 {
 	if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_Y] < -10000
-	    && ite_button > 0) {
+	&& ite_button > 0) {
 		ite_button -= 1;
 		msleep(VALUE_MSLEEP);
 	} else if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_Y] > 10000
-		&& ite_button < menu->getNbButton()) {
+	&& ite_button < menu->getNbButton()) {
 		ite_button += 1;
 		msleep(VALUE_MSLEEP);
 	}

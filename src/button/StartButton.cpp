@@ -20,8 +20,8 @@ StartButton::~StartButton()
 
 void	StartButton::action(Graphics *graph)
 {
-	std::unique_ptr<AMenu> main (new MainMenu);
-	Map	map(1, 1);
+	std::unique_ptr<AMenu> main = std::make_unique<MainMenu>();
+	Map	map(13, 11, graph->getPath());
 
 	_menu = std::move(main);
 	map.generateMap();

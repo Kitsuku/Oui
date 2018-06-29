@@ -5,14 +5,14 @@
 ** abstract class character
 */
 
-#include <vector>
-#include <memory>
-#include "Action.hpp"
-#include "AObject.hpp"
-#include "Graphics.hpp"
-
 #ifndef ACHARACTER_HPP_
 # define ACHARACTER_HPP_
+
+#include <vector>
+#include <memory>
+#include <irrlicht.h>
+#include "Action.hpp"
+#include "AObject.hpp"
 
 class	ACharacter
 {
@@ -54,11 +54,23 @@ public:
 	void				moveUp(std::vector<AObject *>);
 	void				moveDown(std::vector<AObject *>);
 	AObject				*putBomb(std::vector<AObject *>);
-	void				checkDeath(std::vector<AObject *>);
+	void				checkPlayerDeath(
+						std::vector<AObject *>);
 	void				checkBonus(std::vector<AObject *>);
 	void				removePutBomb();
+	Action				getOldDir();
+	Action				getOldAction();
+	std::string			getBombLiveSprite();
+	std::string			getBombDeathSprite();
+	void				setOldDir(Action);
+	void				setOldAction(Action);
+	void				setBombLiveSprite(std::string);
+	void				setBombDeathSprite(std::string);
+	void				setDelayDead(unsigned int);
 
 protected:
+	Action				_oldDir;
+	Action				_oldAction;
 	int				_nbrPlayer;
 	int				_nbrMaxBomb;
 	int				_nbrPutBomb;

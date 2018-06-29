@@ -5,9 +5,10 @@ IF(WIN32)
   set (SRC
     src/main.cpp
     src/Launcher.cpp
-    src/checkDie.cpp
-    src/getObjectAtPosition.cpp
-    src/usefullGestionFct.cpp)
+    src/checkDeath.cpp
+    src/getObject.cpp
+    src/usefullGestionFct.cpp
+    src/MyException.cpp)
   set (MENUSRC
     src/menu/AMenu.cpp
     src/menu/MainMenu.cpp
@@ -50,8 +51,7 @@ IF(WIN32)
     src/button/StartSoloButton.cpp)
   set (GRAPHICSRC
     src/graphics/Graphics.cpp
-    src/graphics/MyEvent.cpp
-    src/graphics/MyException.cpp)
+    src/graphics/MyEvent.cpp)
   set (CHARACSRC
     src/characters/ACharacter.cpp
     src/characters/Player.cpp
@@ -68,9 +68,10 @@ ELSE(WIN32)
   set (SRC
     src/Launcher.cpp
     src/main.cpp
-    src/checkDie.cpp
-    src/getObjectAtPosition.cpp
-    src/usefullGestionFct.cpp)
+    src/checkDeath.cpp
+    src/getObject.cpp
+    src/usefullGestionFct.cpp
+    src/MyException.cpp)
   set (MENUSRC
     src/menu/AMenu.cpp
     src/menu/MainMenu.cpp
@@ -104,8 +105,7 @@ ELSE(WIN32)
     src/button/StartMultiButton.cpp)
   set (GRAPHICSRC
     src/graphics/Graphics.cpp
-    src/graphics/MyEvent.cpp
-    src/graphics/MyException.cpp)
+    src/graphics/MyEvent.cpp)
   set (MAPSRC
     src/map/Map.cpp
     src/map/play.cpp)
@@ -124,5 +124,6 @@ ELSE(WIN32)
   add_executable(bomberman ${SRC} ${MENUSRC} ${BUTTONSRC} ${GRAPHICSRC} ${MAPSRC} ${OBJECTSRC} ${CHARACSRC})
   link_directories(./lib)
   target_link_libraries(bomberman ${LIBIRR} ${LDFLAGS})
+  target_compile_options(bomberman PRIVATE -g)
   install(TARGETS bomberman DESTINATION ${bomberman_SOURCE_DIR})
 ENDIF(WIN32)

@@ -12,9 +12,9 @@
 
 MainMenu::MainMenu()
 {
-	std::unique_ptr<AButton> play (new PlayButton);
-	std::unique_ptr<AButton> option (new OptionButton);
-	std::unique_ptr<AButton> exit (new ExitButton);
+	std::unique_ptr<AButton> play = std::make_unique<PlayButton>();
+	std::unique_ptr<AButton> option = std::make_unique<OptionButton>();
+	std::unique_ptr<AButton> exit = std::make_unique<ExitButton>();
 
 	_buttons.push_back(std::move(play));
 	_buttons.push_back(std::move(option));

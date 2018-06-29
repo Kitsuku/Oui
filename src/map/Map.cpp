@@ -1,9 +1,9 @@
-//
-// EPITECH PROJECT, 2018
-// Map functions
-// File description:
-//
-//
+/*
+** EPITECH PROJECT, 2018
+** Map functions
+** File description:
+**
+*/
 
 #include "Player.hpp"
 #include "Map.hpp"
@@ -14,15 +14,58 @@
 #include "enumObjectType.hpp"
 #include "Positions.hpp"
 #include "IA.hpp"
-#include "checkDie.hpp"
 #include "Bonus.hpp"
 #include "Wall.hpp"
-#include "getObjectAtPosition.hpp"
 #include "Object.hpp"
 #include "json.hpp"
 #include <string>
 #include <iostream>
 #include <fstream>
+
+Map::Map(int x, int y, const std::string &path): _path(path)
+{
+	_mapSize.x = 13;
+	_mapSize.y = 11;
+}
+
+Positions	Map::getMapSize()
+{
+	return _mapSize;
+}
+
+AObject		*Map::getMapElem(unsigned int nb)
+{
+	if (nb < _map.size())
+		return _map.at(nb).get();
+	return nullptr;
+}
+
+ACharacter	*Map::getCharacter(unsigned int nb)
+{
+	if (nb < _characters.size())
+		return _characters.at(nb).get();
+	return nullptr;
+}
+
+int		Map::getNbMapElem()
+{
+	return _map.size();
+}
+
+int		Map::getNbCharacter()
+{
+	return _characters.size();
+}
+
+void		Map::addMapElem(std::unique_ptr<AObject> obj)
+{
+	_map.push_back(std::move(obj));
+}
+
+void		Map::addCharacter(std::unique_ptr<ACharacter> charac)
+{
+	_characters.push_back(std::move(charac));
+}
 
 std::string	Map::getBackground()
 {
@@ -34,7 +77,12 @@ std::string	Map::getGround()
 	return _ground;
 }
 
-void    openFieldStartChara(Positions *coord)
+const std::string	&Map::getPath() const
+{
+	return _path;
+}
+
+void    Map::openFieldStartChara(Positions *coord)
 {
 	if ((coord->y == 0 && coord->x == 10) ||
 	    (coord->y == 1 && coord->x == 12) ||
@@ -64,9 +112,8 @@ std::vector<ACharacter *>	Map::getAllCharacters()
 {
 	std::vector<ACharacter *>	allCharacters;
 
-	for (int it = 0; it != getNbCharacter(); it++) {
+	for (int it = 0; it != getNbCharacter(); it++)
 		allCharacters.push_back(getCharacter(it));
-	}
 	return allCharacters;
 }
 
@@ -92,7 +139,7 @@ int	Map::getNbIAAlive()
 		if ((_characters[lenVector].get()->getNbrPlayer()) < 0)
 			nb += 1;
 		lenVector += 1;
-	}	
+	}
 	return nb;
 }
 
@@ -107,14 +154,14 @@ std::vector<Positions>	Map::coordForUnbrWall()
 			pos.y = y;
 			pos.x = x;
 			ret.push_back(pos);
-			std::unique_ptr<AObject>        newWall(new UnbrWall(pos, finishWall));
+			std::unique_ptr<AObject>        newWall = std::make_unique<UnbrWall>(pos, finishWall);
 			this->_map.push_back(std::move(newWall));
 		}
 	}
 	return ret;
 }
 
-bool	isUnbrWall(std::vector<Positions> posUnbrWall, Positions coord)
+bool	Map::isUnbrWall(std::vector<Positions> posUnbrWall, Positions coord)
 {
 	int	temp = 0;
 
@@ -141,7 +188,7 @@ void    Map::generateMap()
 		openFieldStartChara(&coord);
 		rand = (1 + std::rand()/((100 + 1u)/6)) % 100;
 		if (coord.x <= 12 && coord.y <= 10 && isUnbrWall(posUnbrWall, coord) && rand <= 83) {
-			std::unique_ptr<AObject>        newWall(new Wall(coord, wall, unWall));
+			std::unique_ptr<AObject>        newWall = std::make_unique<Wall>(coord, wall, unWall);
 			this->_map.push_back(std::move(newWall));
 		}
 		coord.x += 1;
@@ -168,42 +215,42 @@ void	Map::generateCharacter(int nbPlayer)
 	if (nbPlayer == 1) {
 		pos.x = 0;
 		pos.y = 0;
-		std::unique_ptr<ACharacter>     newChara(new Player(1, pos, vec_sprite, living, dead));
+		std::unique_ptr<ACharacter>     newChara = std::make_unique<Player>(1, pos, vec_sprite, living, dead);
 		this->_characters.push_back(std::move(newChara));
 		pos.x = _mapSize.x - 1;
 		pos.y = 0;
-		std::unique_ptr<ACharacter>     newIA1(new IA(-1, pos, vec_sprite, living, dead));
+		std::unique_ptr<ACharacter>     newIA1 = std::make_unique<IA>(-1, pos, vec_sprite, living, dead);
 		this->_characters.push_back(std::move(newIA1));
 		pos.x = 0;
 		pos.y = _mapSize.y - 1;
-		std::unique_ptr<ACharacter>     newIA2(new IA(-2, pos, vec_sprite, living, dead));
+		std::unique_ptr<ACharacter>     newIA2 = std::make_unique<IA>(-2, pos, vec_sprite, living, dead);
 		this->_characters.push_back(std::move(newIA2));
 		pos.x = _mapSize.x - 1;
 		pos.y = _mapSize.y - 1;
-		std::unique_ptr<ACharacter>     newIA3(new IA(-3, pos, vec_sprite, living, dead));
+		std::unique_ptr<ACharacter>     newIA3 = std::make_unique<IA>(-3, pos, vec_sprite, living, dead);
 		this->_characters.push_back(std::move(newIA3));
 	}
 	else if (nbPlayer == 2){
 		pos.x = 0;
 		pos.y = 0;
-		std::unique_ptr<ACharacter>     newChara(new Player(1, pos, vec_sprite, living, dead));
+		std::unique_ptr<ACharacter>     newChara = std::make_unique<Player>(1, pos, vec_sprite, living, dead);
 		this->_characters.push_back(std::move(newChara));
 		pos.x = _mapSize.x - 1;
 		pos.y = 0;
-		std::unique_ptr<ACharacter>     newChara2(new Player(2, pos, vec_sprite, living, dead));
+		std::unique_ptr<ACharacter>     newChara2 = std::make_unique<Player>(2, pos, vec_sprite, living, dead);
 		this->_characters.push_back(std::move(newChara2));
 		pos.x = 0;
 		pos.y = _mapSize.y - 1;
-		std::unique_ptr<ACharacter>     newIA(new IA(-1, pos, vec_sprite, living, dead));
+		std::unique_ptr<ACharacter>     newIA = std::make_unique<IA>(-1, pos, vec_sprite, living, dead);
 		this->_characters.push_back(std::move(newIA));
 		pos.x = _mapSize.x - 1;
 		pos.y = _mapSize.y - 1;
-		std::unique_ptr<ACharacter>     newIA2(new IA(-2, pos, vec_sprite, living, dead));
+		std::unique_ptr<ACharacter>     newIA2 = std::make_unique<IA>(-2, pos, vec_sprite, living, dead);
 		this->_characters.push_back(std::move(newIA2));
 	}
 }
 
-void	saveObj(AObject *obj, std::string fileName)
+void	Map::saveObj(AObject *obj, std::string fileName)
 {
 	std::ofstream	file;
 	Positions	objPos = obj->getPos();
@@ -221,7 +268,7 @@ void	saveObj(AObject *obj, std::string fileName)
 	file.close();
 }
 
-void	saveBomb(AObject *obj, std::string fileName)
+void	Map::saveBomb(AObject *obj, std::string fileName)
 {
 	std::ofstream	file;
 	Bomb		*bomb = static_cast<Bomb *> (obj);
@@ -246,7 +293,7 @@ void	saveBomb(AObject *obj, std::string fileName)
 	file.close();
 }
 
-void	saveCharacter(ACharacter *character, std::string fileName)
+void	Map::saveCharacter(ACharacter *character, std::string fileName)
 {
 	std::ofstream	file;
 	Positions	characPos;
@@ -266,6 +313,11 @@ void	saveCharacter(ACharacter *character, std::string fileName)
 	j["isDead"] = character->getIsDead();
 	j["sprites"] = character->getSprites();
 	j["action"] = character->getAction();
+	j["oldDir"] = character->getOldDir();
+	j["oldAction"] = character->getOldAction();
+	j["bombLiveSprite"] = character->getBombLiveSprite();
+	j["bombDeathSprite"] = character->getBombDeathSprite();
+	j["delayDead"] = character->getDelayDead();
 	file << j << std::endl;
 	file.close();
 }
@@ -291,9 +343,9 @@ void	Map::saveMap(std::string save)
 	}
 }
 
-std::unique_ptr<AObject>	loadBomb(nlohmann::json j)
+std::unique_ptr<AObject>	Map::loadBomb(nlohmann::json j)
 {
-	std::unique_ptr<Bomb>	bomb(new Bomb());
+	std::unique_ptr<Bomb>	bomb = std::make_unique<Bomb>();
 	Positions			bombPos;
 
 	bombPos.x = j["posX"];
@@ -312,9 +364,9 @@ std::unique_ptr<AObject>	loadBomb(nlohmann::json j)
 	return (std::move(bomb));
 }
 
-std::unique_ptr<AObject>	loadObj(nlohmann::json j)
+std::unique_ptr<AObject>	Map::loadObj(nlohmann::json j)
 {
-	std::unique_ptr<AObject>	obj(new Object());
+	std::unique_ptr<AObject>	obj = std::make_unique<Object>();
 	Positions			objPos;
 
 	objPos.x = j["posX"];
@@ -327,9 +379,9 @@ std::unique_ptr<AObject>	loadObj(nlohmann::json j)
 	return (std::move(obj));
 }
 
-std::unique_ptr<ACharacter>	loadCharacter(nlohmann::json j)
+std::unique_ptr<ACharacter>	Map::loadCharacter(nlohmann::json j)
 {
-	std::unique_ptr<ACharacter>	character(new Player());
+	std::unique_ptr<ACharacter>	character = std::make_unique<Player>();
 	Positions			characPos;
 
 	characPos.x = j["posX"];
@@ -344,16 +396,19 @@ std::unique_ptr<ACharacter>	loadCharacter(nlohmann::json j)
 	character->setIsDead(j["isDead"]);
 	character->setSprites(j["sprites"]);
 	character->setAction(j["action"]);
+	character->setOldDir(j["oldDir"]);
+	character->setOldAction(j["oldAction"]);
+	character->setBombLiveSprite(j["bombLiveSprite"]);
+	character->setBombDeathSprite(j["bombDeathSprite"]);
+	character->setDelayDead(j["delayDead"]);
 	return (std::move(character));
 }
 
 void	Map::loadMapFromSave(std::string fileName)
 {
-	std::cout << "Debut" << std::endl;
-	std::ifstream	file(fileName);
+	std::ifstream	file(_path + "save/" + fileName);
 	nlohmann::json	j;
-      
-	std::cout << "filename = " << fileName << std::endl;
+
 	setSpriteGroundAndBackGround();
 	while (file) {
 		try {
@@ -371,12 +426,11 @@ void	Map::loadMapFromSave(std::string fileName)
 			file.close();
 		}
 	}
-	std::cout << "Fin" << std::endl;
 }
 
 void	Map::setSpriteGroundAndBackGround()
 {
-	std::ifstream	file(".conf", std::ios::in);
+	std::ifstream	file((_path + ".conf").c_str(), std::ios::in);
 	std::string	buffer;
 
 	if (file) {

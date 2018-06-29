@@ -13,10 +13,10 @@
 
 MultiMenu::MultiMenu()
 {
-	std::unique_ptr<AButton> start (new StartMultiButton);
-	std::unique_ptr<AButton> ground (new MultiGroundButton);
-	std::unique_ptr<AButton> background (new BackGroundMultiButton);
-	std::unique_ptr<AButton> return_mm (new ReturnMmButton);
+	std::unique_ptr<AButton> start = std::make_unique<StartMultiButton>();
+	std::unique_ptr<AButton> ground = std::make_unique<MultiGroundButton>();
+	std::unique_ptr<AButton> background = std::make_unique<BackGroundMultiButton>();
+	std::unique_ptr<AButton> return_mm = std::make_unique<ReturnMmButton>();
 
 	_buttons.push_back(std::move(start));
 	_buttons.push_back(std::move(ground));

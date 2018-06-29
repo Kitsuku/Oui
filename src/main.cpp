@@ -1,9 +1,9 @@
-//
-// EPITECH PROJECT, 2018
-// Indie Studio
-// File description:
-// main menu
-//
+/*
+** EPITECH PROJECT, 2018
+** Indie Studio
+** File description:
+** main menu
+*/
 
 #ifdef WIN32
 #include <io.h>
@@ -36,6 +36,7 @@ int	main(int ac, char **av)
 	}
 	path = path.substr(0, size + 1);
 #endif
+	std::srand(std::time(nullptr));
 	launcher.setPath(path);
 	try {
 		launcher.launch();

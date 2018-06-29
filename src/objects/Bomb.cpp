@@ -12,7 +12,7 @@
 #endif
 #include <iostream>
 #include "Bomb.hpp"
-#include "checkDie.hpp"
+#include "checkDeath.hpp"
 #include "AObject.hpp"
 
 Bomb::Bomb(int nbr_player, int given_power, Positions pos,
@@ -76,12 +76,13 @@ void	Bomb::updatePower(AObject *object)
 
 void	Bomb::updateTimer(AObject *object)
 {
-	Bomb	*bomb;
+	Bomb	*bomb = nullptr;
+	checkDeath	check_death;
 
 	if (object->getObjectType() == objectType::BOMB &&
 	object->getIsDestroyed() == true) {
-		bomb = (Bomb *)object;
-		if (checkDie(_position, bomb->getPos(), bomb))
+		bomb = static_cast<Bomb *>(object);
+		if (check_death.checkDie(_position, bomb->getPos(), bomb))
 			this->destroy();
 	}
 }

@@ -5,14 +5,14 @@
 ** classBomb declarations
 */
 
+#ifndef CLASSBOMB_HPP_
+# define CLASSBOMB_HPP_
+
 #include <time.h>
 #include <vector>
 #include "Positions.hpp"
 #include "enumObjectType.hpp"
 #include "AObject.hpp"
-
-#ifndef CLASSBOMB_HPP_
-# define CLASSBOMB_HPP_
 
 class	Bomb : public AObject
 {
@@ -45,7 +45,7 @@ protected:
 	int	_power_down;
 	int	_power_left;
 	int	_power_right;
-	
+
 };
 
 #endif /* !CLASSBOMB_HPP_ */

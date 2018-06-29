@@ -20,7 +20,7 @@ DisplayCommandButton::~DisplayCommandButton()
 
 void	DisplayCommandButton::action(Graphics *graph)
 {
-	std::unique_ptr<AMenu> pause_menu (new PauseMenu);
+	std::unique_ptr<AMenu> pause_menu = std::make_unique<PauseMenu>();
 	int	check_a = 0;
 
 	_menu = std::move(pause_menu);

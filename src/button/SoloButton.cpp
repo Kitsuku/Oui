@@ -19,7 +19,7 @@ SoloButton::~SoloButton()
 
 void	SoloButton::action(Graphics *graph)
 {
-	std::unique_ptr<AMenu> solo (new SoloMenu);
+	std::unique_ptr<AMenu> solo = std::make_unique<SoloMenu>();
 
 	_menu = std::move(solo);
 	graph = graph;

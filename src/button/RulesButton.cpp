@@ -20,7 +20,7 @@ RulesButton::~RulesButton()
 
 void	RulesButton::action(Graphics *graph)
 {
-	std::unique_ptr<AMenu> pause (new PauseMenu);
+	std::unique_ptr<AMenu> pause = std::make_unique<PauseMenu>();
 	int	check_a;
 
 	_menu = std::move(pause);
