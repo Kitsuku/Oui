@@ -49,7 +49,7 @@ void	saveGestionSelection(std::vector<std::string> files, Graphics *graph)
 	unsigned int	ite_file = 0;
 	int		check_a = 0;
 	int		check_b = 0;
-	std::string	file = "save/";
+	const std::string &path = graph->getPath() + "save/";
 
 	while (check_b != 2 && graph->begin()) {
 		displaySaveGestion(graph, files, ite_file);
@@ -59,9 +59,7 @@ void	saveGestionSelection(std::vector<std::string> files, Graphics *graph)
 		check_b = ButtonUnpressed(joystickData, check_b, 1);
 		ite_file = MoveFileFromMenu(ite_file, files, joystickData);
 		if (check_a == 2) {
-			file.append(files.at(ite_file));
-			remove(file.c_str());
-			file = "save/";
+			remove((path + files.at(ite_file)).c_str());
 			files.erase(files.begin() + ite_file);
 		}
 		graph->end();
@@ -71,18 +69,19 @@ void	saveGestionSelection(std::vector<std::string> files, Graphics *graph)
 void	SaveGestionButton::action(Graphics *graph)
 {
 	std::unique_ptr<AMenu> option = std::make_unique<OptionMenu>();
+	const std::string	&path = graph->getPath();
 	struct dirent	*dirp;
 	std::vector<std::string> files;
 	DIR	*dir;
 
 	_menu = std::move(option);
-	dir = opendir("save");
+	dir = opendir((path + "save").c_str());
 	if (!dir)
 		return;
 	dirp = readdir(dir);
 	while (dirp) {
 		if (dirp->d_name[0] != '.')
-		files.push_back(dirp->d_name);
+			files.push_back(dirp->d_name);
 		dirp = readdir(dir);
 	}
 	saveGestionSelection(files, graph);

@@ -98,15 +98,17 @@ private:
 			std::vector<PlayerStruct>::iterator playerIt,
 			const Positions &sizeMap);
 	void	displayObject(AObject *object, const Positions &sizeMap);
-	void	displayBorder(const std::string &unbWall,
-			const Positions &sizeMap);
 	void	rotateCharacter(const Action, const Action, const unsigned int);
 	void	displayBomb(Bomb *bomb, const Positions &sizeMap);
 	void	displayMeshBomb(irr::scene::IAnimatedMesh *mesh,
 			const coord_t &coord, const Positions &sizeMap);
 	void	displayExplosion(Bomb *bomb, const Positions &sizeMap);
 	void	displayVerticalExplosion(Bomb *bomb,
-			const Positions &sizeMap);
+			const Positions &sizeMap,
+			const unsigned int realPower);
+	unsigned int	calculePower(Bomb *bomb,
+			const std::string &direction,
+			const unsigned int defaultPower) const;
 	void	displayCube(const std::string&image, const Positions &position,
 			const Positions &oldSizeMap);
 	void	setCube(const std::string &image, irr::scene::ISceneNode *cube);

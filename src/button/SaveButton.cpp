@@ -11,7 +11,7 @@
 #include "Map.hpp"
 #include "SaveButton.hpp"
 #include "PauseMenu.hpp"
-
+//save solo-multi
 SaveButton::SaveButton()
 {
 	_name = "Save";
@@ -30,7 +30,6 @@ void	SaveButton::save(Map *map)
 	size_t			ite = 0;
 
 	_menu = std::move(pause);
-	std::cout << "getNbrCharacter : " << map->getNbCharacter();
 	if (map->getNbCharacter() == 1)
 		path.append("solo_");
 	else
@@ -49,7 +48,6 @@ void	SaveButton::save(Map *map)
 		ite = path.find(' ', ite);
 	}
 	path.append(".json");
-	std::cout << "save : " << path << std::endl;
 	map->saveMap(path);
 }
 

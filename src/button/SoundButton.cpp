@@ -23,13 +23,13 @@ SoundButton::~SoundButton()
 {
 }
 
-std::vector<std::string>	getConfSoundContent()
+std::vector<std::string>	getConfSoundContent(const std::string &path)
 {
 	std::string	line;
 	std::ifstream	file;
 	std::vector<std::string>	file_content;
 
-	file.open(".conf", std::ifstream::in);
+	file.open((path + "/.conf").c_str(), std::ifstream::in);
 	if (file.is_open()) {
 		getline(file, line);
 		file_content.push_back(line);
@@ -42,13 +42,13 @@ std::vector<std::string>	getConfSoundContent()
 	return (file_content);
 }
 
-unsigned int	getSoundConf()
+unsigned int	getSoundConf(const std::string &path)
 {
 	std::string	line;
 	std::ifstream	file;
 	unsigned int	sound;
 
-	file.open(".conf", std::ifstream::in);
+	file.open((path + "/.conf").c_str(), std::ifstream::in);
 	if (file.is_open()) {
 		getline(file, line);
 		getline(file, line);
@@ -59,11 +59,12 @@ unsigned int	getSoundConf()
 	return (sound);
 }
 
-void	writeSoundMenuConf(int ite_sound, std::vector<std::string> content)
+void	writeSoundMenuConf(int ite_sound, std::vector<std::string> content,
+	const std::string &path)
 {
 	std::ofstream	file;
 
-	file.open(".conf", std::ofstream::trunc | std::ofstream::out);
+	file.open((path + "/.conf").c_str(), std::ofstream::trunc | std::ofstream::out);
 	file << content.at(0) << std::endl;
 	file << content.at(1) << std::endl;
 	file << ite_sound << std::endl;
@@ -86,7 +87,8 @@ void	SoundButton::action(Graphics *graph)
 {
 	std::unique_ptr<AMenu> option = std::make_unique<OptionMenu>();
 	int	check_b = 0;
-	unsigned int	ite_sound = getSoundConf();
+	const	std::string path = graph->getPath();
+	unsigned int	ite_sound = getSoundConf(path);
 	std::vector<std::string>	file_content;
 
 	_menu = std::move(option);
@@ -95,8 +97,8 @@ void	SoundButton::action(Graphics *graph)
                         &joystickData = graph->getController();
 		check_b = ButtonUnpressed(joystickData, check_b, 1);
 		ite_sound = ChangeSoundMenu(ite_sound, joystickData);
-		file_content = getConfSoundContent();
-		writeSoundMenuConf(ite_sound, file_content);
+		file_content = getConfSoundContent(path);
+		writeSoundMenuConf(ite_sound, file_content, path);
 		displaySoundInterface(graph, ite_sound);
 		graph->end();
 	}

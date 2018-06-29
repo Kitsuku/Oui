@@ -23,13 +23,13 @@ PauseSoundButton::~PauseSoundButton()
 {
 }
 
-std::vector<std::string>        getConfSoundPauseContent()
+std::vector<std::string>        getConfSoundPauseContent(const std::string &path)
 {
 	std::string	line;
 	std::ifstream	file;
 	std::vector<std::string>        file_content;
 
-	file.open(".conf", std::ifstream::in);
+	file.open((path + "/.conf").c_str(), std::ifstream::in);
 	if (file.is_open()) {
 		getline(file, line);
 		file_content.push_back(line);
@@ -42,11 +42,12 @@ std::vector<std::string>        getConfSoundPauseContent()
 	return (file_content);
 }
 
-void    writeSoundPauseMenuConf(int ite_sound, std::vector<std::string> content)
+void    writeSoundPauseMenuConf(int ite_sound, std::vector<std::string> content
+	, const std::string &path)
 {
 	std::ofstream	file;
 
-	file.open(".conf", std::ofstream::trunc | std::ofstream::out);
+	file.open((path + "/.conf").c_str(), std::ofstream::trunc | std::ofstream::out);
 	file << content.at(0) << std::endl;
 	file << content.at(1) << std::endl;
 	file << ite_sound << std::endl;
@@ -65,13 +66,13 @@ void	displaySoundPauseInterface(Graphics *graph, int ite_sound)
 	graph->displayText("PRESS B TO GO BACK ", {1500, 1020, 200, 30}, {100, 255, 255, 255});
 }
 
-unsigned int    getSoundConfPause()
+unsigned int    getSoundConfPause(const std::string &path)
 {
 	std::string	line;
 	std::ifstream	file;
 	unsigned int	sound;
 
-	file.open(".conf", std::ifstream::in);
+	file.open((path + "/.conf").c_str(), std::ifstream::in);
 	if (file.is_open()) {
 		getline(file, line);
 		getline(file, line);
@@ -86,7 +87,8 @@ void	PauseSoundButton::action(Graphics *graph)
 {
 	std::unique_ptr<AMenu> pause = std::make_unique<PauseMenu>();
 	int	check_b = 0;
-	unsigned int	ite_sound = getSoundConfPause();
+	const std::string	&path = graph->getPath();
+	unsigned int	ite_sound = getSoundConfPause(path);
 	std::vector<std::string>	file_content;
 
 	_menu = std::move(pause);
@@ -95,8 +97,8 @@ void	PauseSoundButton::action(Graphics *graph)
 			&joystickData = graph->getController();
 		check_b = ButtonUnpressed(joystickData, check_b, 1);
 		ite_sound = ChangeSoundMenu(ite_sound, joystickData);
-		file_content = getConfSoundPauseContent();
-		writeSoundPauseMenuConf(ite_sound, file_content);
+		file_content = getConfSoundPauseContent(path);
+		writeSoundPauseMenuConf(ite_sound, file_content, path);
 		displaySoundPauseInterface(graph, ite_sound);
 		graph->end();
 	}

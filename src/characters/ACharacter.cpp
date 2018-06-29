@@ -277,7 +277,6 @@ void	ACharacter::moveLeft(std::vector<AObject *> objects)
 		object2 = objects[idx2];
 	pos = (idx != -1) ? (object->getPos()) : (pos);
 	pos2 = (idx2 != -1) ? (object2->getPos()) : (pos2);
-
 	if (idx != -1 && (object != nullptr && object->getObjectType() == objectType::BOMB && round(_position.x) <= pos.x) ||
 	(idx2 != -1 && object2 != nullptr && object2->getObjectType() == objectType::BOMB && round(_position.x) <= pos2.x))
 	{
@@ -324,27 +323,27 @@ void	ACharacter::moveRight(std::vector<AObject *> objects)
 	pos = (idx != -1) ? (object->getPos()) : (pos);
 	pos2 = (idx2 != -1) ? (object2->getPos()) : (pos2);
 	if (idx != -1 && (object != nullptr && object->getObjectType() == objectType::BOMB && round(_position.x) >= pos.x) ||
-	(idx2 != -1 && object2 != nullptr && object2->getObjectType() == objectType::BOMB && round(_position.x) >= pos2.x))
+	    (idx2 != -1 && object2 != nullptr && object2->getObjectType() == objectType::BOMB && round(_position.x) >= pos2.x))
 	{
 	} else {
-	if ((idx != -1 && _wallPass == false && checkIsBonus(object) != true) ||
-	idx2 != -1 && _wallPass == false && checkIsBonus(object2) != true) {
-		if ((round(_position.y + 0.1) == pos.y ||
-		round(_position.y - 0.1) == pos2.y ||
-		(this->_position.x + this->_speed) >= (pos.x - 1) ||
-		(this->_position.x + this->_speed) >= (pos2.x - 1))) {
-			return ;
-		}
-	} else if ((idx != -1 && _wallPass == true && checkIsBonus(object) != true) ||
-		(idx2 != -1 && _wallPass == true && checkIsBonus(object2) != true)) {
-		if ((object != nullptr && object->getObjectType() != objectType::WALL &&
-		(round(_position.y + 0.1) == pos.y ||
-		(this->_position.x + this->_speed) >= (pos.x - 1))) ||
-
-		(object2 != nullptr && object2->getObjectType() != objectType::WALL &&
-		(round(_position.y - 0.1) == pos2.y ||
-		(this->_position.x + this->_speed) >= (pos2.x - 1)))) {
-			return ;
+		if ((idx != -1 && _wallPass == false && checkIsBonus(object) != true) ||
+		    idx2 != -1 && _wallPass == false && checkIsBonus(object2) != true) {
+			if ((round(_position.y + 0.1) == pos.y ||
+			     round(_position.y - 0.1) == pos2.y ||
+			     (this->_position.x + this->_speed) >= (pos.x - 1) ||
+			     (this->_position.x + this->_speed) >= (pos2.x - 1))) {
+				return ;
+			}
+		} else if ((idx != -1 && _wallPass == true && checkIsBonus(object) != true) ||
+			   (idx2 != -1 && _wallPass == true && checkIsBonus(object2) != true)) {
+			if ((object != nullptr && object->getObjectType() != objectType::WALL &&
+			     (round(_position.y + 0.1) == pos.y ||
+			      (this->_position.x + this->_speed) >= (pos.x - 1))) ||
+			    
+			    (object2 != nullptr && object2->getObjectType() != objectType::WALL &&
+			     (round(_position.y - 0.1) == pos2.y ||
+			      (this->_position.x + this->_speed) >= (pos2.x - 1)))) {
+				return ;
 		}
 	}
 	}
@@ -370,7 +369,7 @@ void	ACharacter::moveUp(std::vector<AObject *> objects)
 		object2 = objects[idx2];
 	pos = (idx != -1) ? (object->getPos()) : (pos);
 	pos2 = (idx2 != -1) ? (object2->getPos()) : (pos2);
-		if (idx != -1 && (object != nullptr && object->getObjectType() == objectType::BOMB && round(_position.y) <= pos.y) ||
+	if (idx != -1 && (object != nullptr && object->getObjectType() == objectType::BOMB && round(_position.y) <= pos.y) ||
 	(idx2 != -1 && object2 != nullptr && object2->getObjectType() == objectType::BOMB && round(_position.y) <= pos2.y))
 	{
 	} else {
@@ -416,7 +415,7 @@ void	ACharacter::moveDown(std::vector<AObject *> objects)
 		object2 = objects[idx2];
 	pos = (idx != -1) ? (object->getPos()) : (pos);
 	pos2 = (idx2 != -1) ? (object2->getPos()) : (pos2);
-		if (idx != -1 && (object != nullptr && object->getObjectType() == objectType::BOMB && round(_position.y) >= pos.y) ||
+	if (idx != -1 && (object != nullptr && object->getObjectType() == objectType::BOMB && round(_position.y) >= pos.y) ||
 	(idx2 != -1 && object2 != nullptr && object2->getObjectType() == objectType::BOMB && round(_position.y) >= pos2.y))
 	{
 	} else {
@@ -435,8 +434,8 @@ void	ACharacter::moveDown(std::vector<AObject *> objects)
 		(this->_position.y + this->_speed) >= (pos.y - 1))) ||
 
 		(object2 != nullptr && object2->getObjectType() != objectType::WALL &&
-		(round(_position.x - 0.1) == pos2.x ||
-		(this->_position.y + this->_speed) >= (pos2.y - 1))))
+		 (round(_position.x - 0.1) == pos2.x ||
+		  (this->_position.y + this->_speed) >= (pos2.y - 1))))
 			return ;
 	}
 	}

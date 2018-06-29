@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
+
 IF(WIN32)
   project(bomberman)
   include_directories(include include/Menu include/Button include/Graphics include/objects include/Irrlicht json-develop/single_include/nlohmann /user/X11R6/include)

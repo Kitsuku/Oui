@@ -22,20 +22,20 @@ BackGroundMultiButton::~BackGroundMultiButton()
 {
 }
 
-std::vector<std::string>	getFilesBackgroundMulti()
+std::vector<std::string>	getFilesBackgroundMulti(
+				const std::string &beginPath)
 {
 	struct dirent	*dirp;
 	DIR	*dir;
 	std::vector<std::string>	files;
-	std::string	path = "res/Background/";
+	const std::string	&endPath = "res/Background/";
+	const std::string	&path = beginPath + endPath;
 
-	dir = opendir("res/Background");
+	dir = opendir(path.c_str());
 	dirp = readdir(dir);
 	while (dirp) {
 		if (dirp->d_name[0] != '.') {
-			path.append(dirp->d_name);
-			files.push_back(path);
-			path = "res/Background/";
+			files.push_back(endPath + dirp->d_name);
 		}
 		dirp = readdir(dir);
 	}
@@ -43,24 +43,26 @@ std::vector<std::string>	getFilesBackgroundMulti()
 	return files;
 }
 
-void	writeBackgroundMultiConf(std::string path, std::vector<std::string> content)
+void	writeBackgroundMultiConf(std::string path, std::vector<std::string> content
+				, const std::string &beginConf)
 {
 	std::ofstream	file;
 
-	file.open(".conf", std::ofstream::trunc | std::ofstream::out);
+	file.open((beginConf + "/.conf").c_str(), std::ofstream::trunc | std::ofstream::out);
 	file << path << std::endl;
 	file << content.at(1) << std::endl;
 	file << content.at(2) << std::endl;
 	file.close();
 }
 
-std::vector<std::string>	getConfBackgroundMultiContent()
+std::vector<std::string>	getConfBackgroundMultiContent(
+				const std::string &path)
 {
 	std::string	line;
 	std::ifstream	file;
 	std::vector<std::string>	file_content;
 
-	file.open(".conf", std::ifstream::in);
+	file.open((path + "/.conf").c_str(), std::ifstream::in);
 	if (file.is_open()) {
 		getline(file, line);
 		file_content.push_back(line);
@@ -76,18 +78,18 @@ std::vector<std::string>	getConfBackgroundMultiContent()
 void	BackGroundMultiButton::action(Graphics *graph)
 {
 	std::unique_ptr<AMenu>	multi_menu = std::make_unique<MultiMenu>();
+	const std::string		&path = graph->getPath();
 	std::vector<std::string>	file_content;
 	std::vector<std::string>	files;
 	unsigned int			ite = 0;
 
-	graph = graph;
 	_menu = std::move(multi_menu);
-	file_content = getConfBackgroundMultiContent();
-	files = getFilesBackgroundMulti();
+	file_content = getConfBackgroundMultiContent(path);
+	files = getFilesBackgroundMulti(path);
 	while (files.size() > ite && file_content.at(0).compare(files.at(ite)) != 0)
 		ite += 1;
 	ite += 1;
 	if (ite >= files.size())
 		ite = 0;
-	writeBackgroundMultiConf(files.at(ite), file_content);
+	writeBackgroundMultiConf(files.at(ite), file_content, path);
 }

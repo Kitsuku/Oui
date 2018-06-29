@@ -35,7 +35,7 @@ void	Launcher::splashScreen(Graphics *graph)
 		check_start = ButtonUnpressed(joystickData, check_start, 7);
 		graph->displayBackground("res/splash.jpg");
 		if (flashing >= 0 && flashing <= 40)
-			graph->displayText("PESS START TO CONTINUE",
+			graph->displayText("PRESS START TO CONTINUE",
 			{675, 800, 200, 30}, {255, 255, 255, 255});
 		flashing += 1;
 		if (flashing > 80)

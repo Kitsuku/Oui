@@ -48,7 +48,7 @@ unsigned int	MoveButtonFromMenu(unsigned int ite_button, AMenu *menu,
 		ite_button -= 1;
 		msleep(VALUE_MSLEEP);
 	} else if (joystickData[0].Axis[irr::SEvent::SJoystickEvent::AXIS_Y] > 10000
-	&& ite_button < menu->getNbButton()) {
+		   && ite_button < menu->getNbButton()) {
 		ite_button += 1;
 		msleep(VALUE_MSLEEP);
 	}

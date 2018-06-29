@@ -62,7 +62,6 @@ void	Graphics::displayMap(const std::vector<ACharacter *> &characters,
 			break;
 		}
 	}
-	displayBorder(unbrWall, sizeMap);
 }
 
 void	Graphics::displayBackground(const std::string textureName) const
@@ -350,20 +349,6 @@ void	Graphics::displayObject(AObject *object, const Positions &sizeMap)
 	}
 }
 
-void	Graphics::displayBorder(const std::string &unbWall,
-		const Positions &sizeMap)
-{
-	Positions			borderPos = {-1, -1};
-
-	for (float i = -1; i <= sizeMap.x; i++) {
-		for (float j = -1; j <= sizeMap.y; j ++) {
-			if (j == -1 || j == sizeMap.y || i == -1 || i == sizeMap.x) {
-				displayCube(unbWall, {i, j}, sizeMap);
-			}
-		}
-	}
-}
-
 void	Graphics::displayBomb(Bomb *bomb, const Positions &sizeMap)
 {
 	const std::string		fullPath = _path +
@@ -403,44 +388,57 @@ void	Graphics::displayMeshBomb(irr::scene::IAnimatedMesh *mesh,
 	_animatedNode.push_back(animeBomb);
 }
 
-
 void	Graphics::displayExplosion(Bomb *bomb, const Positions &sizeMap)
 {
 	const std::string		fullPath = _path +
 					bomb->getDyingSprites();
 	const Positions			posBomb = bomb->getPos();
 	Positions			posExplosion = posBomb;
+	const unsigned int		realPower = bomb->getPower("default");
 
-	for (unsigned i = bomb->getPower("left"); i > 0; i--) {
+	for (unsigned i = calculePower(bomb, "left", realPower); i > 0; i--) {
 		posExplosion.x -= 1;
 		displayCube(fullPath, posExplosion, sizeMap);
 	}
 	posExplosion = posBomb;
-	for (unsigned i = bomb->getPower("right"); i > 0; i--) {
+	for (unsigned i = calculePower(bomb, "right", realPower); i > 0; i--) {
 		posExplosion.x += 1;
 		displayCube(fullPath, posExplosion, sizeMap);
 	}
-	displayVerticalExplosion(bomb, sizeMap);
+	displayVerticalExplosion(bomb, sizeMap, realPower);
 }
 
 void	Graphics::displayVerticalExplosion(Bomb *bomb,
-		const Positions &sizeMap)
+		const Positions &sizeMap, const unsigned int realPower)
 {
 	const std::string		fullPath = _path +
 					bomb->getDyingSprites();
 	const Positions			posBomb = bomb->getPos();
 	Positions			posExplosion = posBomb;
 
-	for (unsigned i = bomb->getPower("up"); i > 0; i--) {
+	for (unsigned i = calculePower(bomb, "up", realPower); i > 0; i--) {
 		posExplosion.y -= 1;
 		displayCube(fullPath, posExplosion, sizeMap);
 	}
 	posExplosion = posBomb;
-	for (unsigned i = bomb->getPower("down"); i > 0; i--) {
+	for (unsigned i = calculePower(bomb, "down", realPower); i > 0; i--) {
 		posExplosion.y += 1;
 		displayCube(fullPath, posExplosion, sizeMap);
 	}
 	displayCube(fullPath, posBomb, sizeMap);
+}
+
+unsigned int	Graphics::calculePower(Bomb *bomb,
+		const std::string &direction,
+		const unsigned int defaultPower) const
+{
+	const unsigned int	power = bomb->getPower(direction);
+	unsigned int		ret = power;
+
+	if (power < defaultPower) {
+		ret -= 1;
+	}
+	return power;
 }
 
 void	Graphics::displayCube(const std::string &image,

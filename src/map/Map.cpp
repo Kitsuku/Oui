@@ -158,6 +158,16 @@ std::vector<Positions>	Map::coordForUnbrWall()
 			this->_map.push_back(std::move(newWall));
 		}
 	}
+	for (float i = -1; i <= _mapSize.x; i++) {
+		for (float j = -1; j <= _mapSize.y; j ++) {
+			if (j == -1 || j == _mapSize.y ||
+			i == -1 || i == _mapSize.x) {
+				pos = {i, j};
+				_map.push_back(std::make_unique<UnbrWall>(
+				pos, finishWall));
+			}
+		}
+	}
 	return ret;
 }
 
@@ -181,6 +191,7 @@ void    Map::generateMap()
 	std::string		wall = "res/wall.jpg";
 	std::string		unWall = "res/brokenWall.png";
 	std::string		finishWall = "res/rockwall_height.bmp";
+	Positions			borderPos = {-1, -1};
 
 	coord.x = 2;
 	coord.y = 0;
